@@ -6,12 +6,15 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule } from "@angular/material/menu";
 import { NavigationService } from "../../../shared/services/navigation.service";
 import { ThemeService } from "../../services/theme.service";
-import { Subscription } from "rxjs";
+import { map, catchError, delay } from "rxjs/operators";
 import { ILayoutConf, LayoutService } from "app/shared/services/layout.service";
 import { JwtAuthService } from "app/shared/services/auth/jwt-auth.service";
 import { TranslateModule } from "@ngx-translate/core";
 import { SidenavComponent } from "../sidenav/sidenav.component";
 import { PerfectScrollbarModule } from "app/shared/components/perfect-scrollbar";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "environments/environment";
+import { Subscription, throwError } from "rxjs";
 
 @Component({
     selector: "app-sidebar-side",
@@ -40,18 +43,54 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
     private navService: NavigationService,
     public themeService: ThemeService,
     private layout: LayoutService,
-    public jwtAuth: JwtAuthService
+    public jwtAuth: JwtAuthService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
     this.iconTypeMenuTitle = this.navService.iconTypeMenuTitle;
-    this.menuItemsSub = this.navService.menuItems$.subscribe(menuItem => {
-      this.menuItems = menuItem;
-      //Checks item list has any icon type.
-      this.hasIconTypeMenuItem = !!this.menuItems.filter(
-        item => item.type === "icon"
-      ).length;
+    // EKIT 
+    // SI PAS DE PROJET SELECTIONNE
+    // ON VA LOADER LES PROJET DE L'UTILISATEUR POUR SELECTION
+    // A PASSER DANS LE SERVICE EKIT AVEC observable
+    this.http.post(`${environment.apiURL}/projects/get`, { a:"b" })
+      .pipe(
+        map((res: any) => {
+          return res.result.map(item => ({
+                name: item.name,
+                type: "link",
+                icon:"list"
+          }));
+        }),
+        catchError((error) => {
+          console.log(error);
+          return throwError(error);
+        })
+    ).subscribe((data) => {
+      //Création de la liste des projets
+      this.menuItems = [  
+          {
+            name: "Projects",
+            type: "separator",
+            icon:"list",
+            addMoreButton:true
+          },
+          ...data
+        ];
+        //A VIRER
+        this.menuItemsSub = this.navService.menuItems$.subscribe(menuItem => {
+          console.log("menuItem",menuItem);
+          this.menuItems = [...this.menuItems,...menuItem];
+          //Checks item list has any icon type.
+          this.hasIconTypeMenuItem = !!this.menuItems.filter(
+            item => item.type === "icon"
+          ).length;
+        });
     });
+
+
+
+    
     this.layoutConf = this.layout.layoutConf;
   }
   ngAfterViewInit() {

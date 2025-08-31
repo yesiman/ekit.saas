@@ -28,7 +28,10 @@
       <!-- separator -->
       <div class="nav-item-sep" *ngIf="item.type === 'separator'">
         <mat-divider></mat-divider>
-        <span class="text-sidebar-text">{{item.name | translate}}</span>
+        <span class="text-sidebar-text">{{item.name | translate}}
+          <mat-icon *ngIf="item.addMoreButton" class="text-sidebar-text icon-separator-add" title="Ajouter un projet">add</mat-icon>
+        </span>
+        
       </div>
 
       <!-- Item -->

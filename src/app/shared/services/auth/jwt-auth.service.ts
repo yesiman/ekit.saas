@@ -41,11 +41,10 @@ export class JwtAuthService {
       .subscribe(params => this.return = params['return'] || '/');
   }
 
-  public signin(username:string, password:string) {
-    //CALL EKIT CUSTOM LOGIN
-    this.signingIn = true;
-    return this.http.post(`${environment.apiURL}/auth/custom/login`, { login:username, pass:password })
+  public signin(username, password) {
+    return of({token: DEMO_TOKEN, user: DEMO_USER})
       .pipe(
+        delay(1000),
         map((res: any) => {
           this.setUserAndToken(res.token, res.user, !!res);
           this.signingIn = false;
@@ -54,7 +53,22 @@ export class JwtAuthService {
         catchError((error) => {
           return throwError(error);
         })
-    );
+      );
+
+    // FOLLOWING CODE SENDS SIGNIN REQUEST TO SERVER
+
+    // this.signingIn = true;
+    // return this.http.post(`${environment.apiURL}/auth/local`, { username, password })
+    //   .pipe(
+    //     map((res: any) => {
+    //       this.setUserAndToken(res.token, res.user, !!res);
+    //       this.signingIn = false;
+    //       return res;
+    //     }),
+    //     catchError((error) => {
+    //       return throwError(error);
+    //     })
+    //   );
   }
 
   /*
@@ -108,7 +122,7 @@ export class JwtAuthService {
   getUser() {
     return this.ls.getItem(this.APP_USER);
   }
-  //UPDATE USER DATA AFTER LOGIN
+
   setUserAndToken(token: String, user: User, isAuthenticated: Boolean) {
     this.isAuthenticated = isAuthenticated;
     this.token = token;
