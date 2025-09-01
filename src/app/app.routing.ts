@@ -71,6 +71,11 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Forms', breadcrumb: 'FORMS'}
       },
       {
+        path: 'ekit',
+        loadChildren: () => import('./views/ekit/ekit.module').then(m => m.AppEkitModule),
+        data: { title: 'Ekit', breadcrumb: 'EKIT'}
+      },
+      {
         path: 'chart',
         loadChildren: () => import('./views/chart-example-view/chart-example-view.module').then(m => m.ChartExampleViewModule),
         data: { title: 'Charts', breadcrumb: 'CHARTS'}

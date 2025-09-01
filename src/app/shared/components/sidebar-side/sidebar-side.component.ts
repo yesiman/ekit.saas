@@ -53,7 +53,7 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
     // SI PAS DE PROJET SELECTIONNE
     // ON VA LOADER LES PROJET DE L'UTILISATEUR POUR SELECTION
     // A PASSER DANS LE SERVICE EKIT AVEC observable
-    this.http.post(`${environment.apiURL}/projects/get`, { a:"b" })
+    this.http.post(`${environment.apiURL}/projects/get`, { networks:(this.jwtAuth.user as any).projects })
       .pipe(
         map((res: any) => {
           return res.result.map(item => ({
@@ -63,7 +63,6 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
           }));
         }),
         catchError((error) => {
-          console.log(error);
           return throwError(error);
         })
     ).subscribe((data) => {
@@ -77,7 +76,7 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
           },
           ...data
         ];
-        //A VIRER
+        //A VIRER / POUR GARDER LES VISU DES COMPOSANTS DISPOS
         this.menuItemsSub = this.navService.menuItems$.subscribe(menuItem => {
           console.log("menuItem",menuItem);
           this.menuItems = [...this.menuItems,...menuItem];

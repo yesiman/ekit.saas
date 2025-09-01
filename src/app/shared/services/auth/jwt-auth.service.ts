@@ -65,7 +65,12 @@ export class JwtAuthService {
     };
     // ================= you will get those data from server =======
     
-    return of(DEMO_USER)
+    this.setUserAndToken(this.ls.getItem(this.JWT_TOKEN), this.ls.getItem(this.APP_USER), true);
+
+    //this.ls.getItem(this.JWT_TOKEN);
+    //this.ls.getItem(this.APP_USER);
+
+    /*return of(DEMO_USER)
       .pipe(
         map((profile: User) => {
           this.setUserAndToken(this.getJwtToken(), profile, true);
@@ -75,7 +80,7 @@ export class JwtAuthService {
         catchError((error) => {
           return of(error);
         })
-      );
+      );*/
     
     /*
       The following code get user data and jwt token is assigned to
@@ -93,7 +98,7 @@ export class JwtAuthService {
     //       this.signout();
     //       return of(error);
     //     })
-    //   );
+    //);
   }
 
   public signout() {
@@ -113,6 +118,7 @@ export class JwtAuthService {
   }
   //UPDATE USER DATA AFTER LOGIN
   setUserAndToken(token: String, user: User, isAuthenticated: Boolean) {
+    console.log(user);
     this.isAuthenticated = isAuthenticated;
     this.token = token;
     this.user = user;

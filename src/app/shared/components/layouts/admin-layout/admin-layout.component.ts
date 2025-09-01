@@ -33,8 +33,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     private router: Router,
     private jwtAuth: JwtAuthService
   ) {
-    // Check Auth Token is valid
-    this.jwtAuth.checkTokenIsValid().subscribe();
+    // PAS BESOIN CAR INTERCEPTOR DOIT RAMENENER SUR LOGIN SI BAD REQUEST
+    this.jwtAuth.checkTokenIsValid();
   }
 
   ngOnInit() {

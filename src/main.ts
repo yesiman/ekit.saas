@@ -20,6 +20,8 @@ import { NavigationService } from './app/shared/services/navigation.service';
 import { AppConfirmService } from './app/shared/services/app-confirm/app-confirm.service';
 import { tokenInterceptorFn } from 'app/shared/interceptors/token-interceptor.fn';
 
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient);
@@ -29,6 +31,10 @@ if (environment.production) {
   enableProdMode();
 }
 
+ModuleRegistry.registerModules([
+    AllCommunityModule, // or AllEnterpriseModule
+]);
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(rootRouterConfig),
@@ -36,6 +42,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withInterceptors([tokenInterceptorFn])),
     RoutePartsService,
     ThemeService,
+    
     LayoutService,
     AppLoaderService,
     AuthGuard,

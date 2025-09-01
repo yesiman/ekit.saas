@@ -27,6 +27,7 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@tailwindcss/postcss": "^4.0.14",
+    "ag-grid-angular": "^34.1.2",
     "angular-calendar": "^0.31.1",
     "angular-in-memory-web-api": "^0.19.0",
     "angular-star-rating": "^7.0.0",
