@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { environment } from 'environments/environment';
 import { catchError, map, throwError } from 'rxjs';
-
+import { themeBalham } from 'ag-grid-community';
+import { ActionCellRendererComponent } from '../components/action-cell-renderer.component';
+import { EditableCellTranslate } from '../components/editable-cell-translate.component';
 
 // Row Data Interface
 interface IRow {
@@ -21,9 +22,12 @@ interface IRow {
 
 @Component({
   selector: 'app-tables',
-  imports: [AgGridAngular,MatCardModule],
+  imports: [
+    AgGridAngular,
+  ],
   templateUrl: './tables.component.html',
-  styleUrl: './tables.component.scss'
+  styleUrl: './tables.component.scss',
+  standalone: true,
 })
 
 export class TablesComponent {
@@ -35,12 +39,22 @@ export class TablesComponent {
   // Row Data: The data to be displayed.
     rowData: IRow[] = [];
     colDefs: ColDef[] = [
-        { field: "body.plib",headerName: 'Titre', },
-        { field: "body.pdesc",headerName: 'Description' },
+        { field: "body.plib",headerName: 'Titre',pinned: 'left', 
+          editable: true ,
+          cellEditor: EditableCellTranslate, },
+        { field: "body.pdesc",
+          headerName: 'Description', 
+          editable: true,
+          cellEditor: EditableCellTranslate,
+         },
+        { field: "button", cellRenderer: ActionCellRendererComponent,width: 100,
+          sortable: false,
+          filter: false,pinned: 'right'},
     ];
+    agGridTheme = themeBalham;
 
     onGridReady(params: GridReadyEvent) {
-
+      const gridApi = params.api;
       this.http.post(`${environment.apiURL}/tables/get`, { })
             .pipe(
               map((res: any) => {
@@ -50,8 +64,13 @@ export class TablesComponent {
                 return throwError(error);
               })
           ).subscribe((data) => {
-            console.log(data);
+            
+            
             this.rowData = data;
+            setTimeout(() => {
+              const allColumnIds = gridApi.getColumns()?.map(col => col.getColId());
+              gridApi.autoSizeColumns(allColumnIds);
+            });
           })
 
       //this.http
