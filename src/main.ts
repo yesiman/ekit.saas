@@ -2,7 +2,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -18,6 +18,7 @@ import { AppLoaderService } from './app/shared/services/app-loader/app-loader.se
 import { AuthGuard } from './app/shared/guards/auth.guard';
 import { NavigationService } from './app/shared/services/navigation.service';
 import { AppConfirmService } from './app/shared/services/app-confirm/app-confirm.service';
+import { tokenInterceptorFn } from 'app/shared/interceptors/token-interceptor.fn';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -32,7 +33,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(rootRouterConfig),
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([tokenInterceptorFn])),
     RoutePartsService,
     ThemeService,
     LayoutService,

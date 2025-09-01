@@ -23,7 +23,6 @@ import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromD
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ErrorHandlerService } from './shared/services/error-handler.service';
-import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 
 
 // AoT requires an exported function for factories
@@ -42,7 +41,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { passThruUnknownUrl: true, delay: 200 }),
     BrowserModule,
     BrowserAnimationsModule,
-    // HttpClientModule,
     SharedModule,
     LayoutModule,
     PerfectScrollbarModule,
