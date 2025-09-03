@@ -50,7 +50,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         deps: [HttpClient]
       }
     }),
-    RouterModule.forRoot(rootRouterConfig, { useHash: false })],
+    RouterModule.forRoot(rootRouterConfig, { useHash: false, onSameUrlNavigation:"reload" })],
   providers: [
     { provide: ErrorHandler, useClass: ErrorHandlerService },
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },

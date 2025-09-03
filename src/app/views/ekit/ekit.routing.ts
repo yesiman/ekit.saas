@@ -8,7 +8,12 @@ export const EkitRoutes: Routes = [
     path: '',
     children: [
       {
-        path: 'tables',
+        path: 'tables/:projectuid',
+        component: TablesComponent,
+        data: { title: 'Tables', breadcrumb: 'Tables' }
+      },
+      {
+        path: 'tables/:projectuid/:tableuid',
         component: TablesComponent,
         data: { title: 'Tables', breadcrumb: 'Tables' }
       },

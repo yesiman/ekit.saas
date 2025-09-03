@@ -37,7 +37,7 @@
       <!-- Item -->
       <div *ngIf="!item.disabled && item.type !== 'separator' && item.type !== 'icon'" class="lvl1">
         <a routerLink="/{{item.state}}" appDropdownToggle matRipple
-          *ngIf="item.type !== 'extLink' && item.type !== 'dropDown'" routerLinkActive="open">
+          *ngIf="item.type !== 'extLink' && item.type !== 'dropDown' && item.type !== 'project'" routerLinkActive="open">
           <mat-icon *ngIf="item.icon" class="sidenav-mat-icon text-sidebar-text">{{item.icon}}</mat-icon>
           <mat-icon *ngIf="item.svgIcon" [svgIcon]="item.svgIcon" class="svgIcon text-sidebar-text"></mat-icon>
           <span class="item-name text-sidebar-text lvl1">{{item.name | translate}}</span>
@@ -62,6 +62,16 @@
           <span class="menuitem-badge mat-bg-{{ badge.color }}" [ngStyle]="{background: badge.color}"
             *ngFor="let badge of item.badges">{{ badge.value }}</span>
           <mat-icon class="menu-caret text-sidebar-text">keyboard_arrow_right</mat-icon>
+        </a>
+
+        <!-- Project item -->
+        <a *ngIf="item.type === 'project'" (click)="loadProject(item.uid)">
+          <mat-icon *ngIf="item.icon" class="sidenav-mat-icon text-sidebar-text">{{item.icon}}</mat-icon>
+          <mat-icon *ngIf="item.svgIcon" [svgIcon]="item.svgIcon" class="svgIcon text-sidebar-text"></mat-icon>
+          <span class="item-name text-sidebar-text lvl1">{{item.name | translate}}</span>
+          <span class="flex-grow"></span>
+          <span class="menuitem-badge mat-bg-{{ badge.color }}" [ngStyle]="{background: badge.color}"
+            *ngFor="let badge of item.badges">{{ badge.value }}</span>
         </a>
 
         <!-- recursive call -->

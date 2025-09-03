@@ -1,6 +1,6 @@
 
 <div class="container-dynamic">
-    <ag-grid-angular 
+    <ag-grid-angular *ngIf="!loading"
     [theme]="agGridTheme"
     [rowData]="rowData"
     [columnDefs]="colDefs" 

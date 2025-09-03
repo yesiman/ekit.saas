@@ -3,7 +3,7 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'editable-cell-translate',
+  selector: 'editable-text-cell-translate',
   imports: [
     FormsModule
   ],
@@ -53,7 +53,7 @@ import { FormsModule } from '@angular/forms';
     }
   `]
 })
-export class EditableCellTranslate implements ICellEditorAngularComp {
+export class EditableTextCellTranslate implements ICellEditorAngularComp {
   private params: any;
   public value: any;
   private popupDiv: HTMLDivElement | null = null;

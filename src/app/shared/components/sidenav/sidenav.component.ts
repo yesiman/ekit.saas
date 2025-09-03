@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppDropdownDirective } from '../../directives/dropdown.directive';
@@ -28,15 +28,25 @@ import { MatDividerModule } from '@angular/material/divider';
     ]
 })
 export class SidenavComponent {
+  private router = inject(Router);
+
   @Input('items') public menuItems: any[] = [];
   @Input('hasIconMenu') public hasIconTypeMenuItem: boolean;
   @Input('iconMenuTitle') public iconTypeMenuTitle: string;
   @ViewChild('sidenav') sidenav:ElementRef;
   
-  constructor() {
 
+
+  constructor() {
+      
   }
   ngOnInit() {
   }
   ngAfterViewInit() {}
+
+  loadProject(uid) {
+    //ON LOAD LE PROJET SELECTIONNE
+    this.router.navigate(["/ekit/tables/"+uid]);
+  }
+
 }

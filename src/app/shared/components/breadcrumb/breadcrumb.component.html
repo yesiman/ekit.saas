@@ -1,5 +1,26 @@
 <div class="container-dynamic">
+
   <div
+    class="breadcrumb-bar"
+    *ngIf="globalService.project"
+  >
+    <ul class="breadcrumb">
+      <li>
+        <a>{{globalService.project}}</a>
+      </li>
+      <li *ngIf="!globalService.table">
+        <a>Tables</a>
+      </li>
+      <li *ngIf="globalService.table">
+        <a routerLink="/ekit/tables/{{globalService.project}}">Tables</a>
+      </li>
+      <li *ngIf="globalService.table">
+        <a>{{globalService.table}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <!--<div
     class="breadcrumb-bar"
     *ngIf="
       layout.layoutConf.useBreadcrumb &&
@@ -30,5 +51,5 @@
         }}</a>
       </li>
     </ul>
-  </div>
+  </div>-->
 </div>

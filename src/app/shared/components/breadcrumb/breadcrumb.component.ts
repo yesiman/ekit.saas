@@ -6,6 +6,7 @@ import { LayoutService } from '../../../shared/services/layout.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { TranslateModule } from '@ngx-translate/core';
+import { GlobalService } from 'app/shared/services/ekit/global.service';
 
 @Component({
     selector: 'app-breadcrumb',
@@ -22,7 +23,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     private router: Router,
     private routePartsService: RoutePartsService,
     private activeRoute: ActivatedRoute,
-    public layout: LayoutService
+    public layout: LayoutService,
+    public globalService:GlobalService
   ) {
     this.routeParts = this.routePartsService.generateRouteParts(this.activeRoute.snapshot);
 
