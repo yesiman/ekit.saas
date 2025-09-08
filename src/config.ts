@@ -1,5 +1,5 @@
 export const config = {
-  apiUrl: 'http://localhost:8700',
+  apiUrl: 'http://localhost:8700/api',
   themeLocalStorageKey: 'egret-theme-id',
   authRoles: {
     sa: ['SA'], // Only Super Admin has access

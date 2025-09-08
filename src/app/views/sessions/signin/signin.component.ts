@@ -1,13 +1,22 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 import { JwtAuthService } from '../../../shared/services/auth/jwt-auth.service';
 import { AppLoaderService } from '../../../shared/services/app-loader/app-loader.service';
 import { egretAnimations } from 'app/shared/animations/egret-animations';
+import { environment } from 'environments/environment';
+import { HttpClient } from '@angular/common/http';
+
+declare global {
+  interface Window {
+    onGoogleSignIn: (response: any) => void;
+  }
+}
+declare const google: any;
 
 @Component({
     selector: 'app-signin',
@@ -19,7 +28,11 @@ import { egretAnimations } from 'app/shared/animations/egret-animations';
 export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatProgressBar) progressBar: MatProgressBar;
   @ViewChild(MatButton) submitButton: MatButton;
+  @Output() loginWithGoogle: EventEmitter<any> = new EventEmitter<any>();
+  
+
   isLoading = false;
+
 
   signupForm: UntypedFormGroup;
   hidePassword = true;
@@ -31,7 +44,8 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private jwtAuth: JwtAuthService,
-    private egretLoader: AppLoaderService
+    private egretLoader: AppLoaderService,
+    private http:HttpClient
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -42,6 +56,16 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
       password: ['12345678', Validators.required],
       remember: [false]
     });
+
+    const body = <HTMLDivElement>document.body;
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    body.appendChild(script);
+    window.onGoogleSignIn= this.onGoogleSignIn.bind(this);
+
+    this.initializeGoogleSignIn();
   }
 
   ngAfterViewInit() {
@@ -54,6 +78,46 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
+  //GOOGLE AUTH
+  onGoogleSignIn() {
+    //console.log(res);
+    google.accounts.id.initialize({
+      client_id: environment.googleConfig.apiKey,
+      callback: this.handleCredentialResponse.bind(this)
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("googleLoginButton"),
+      { theme: "outline", size: "large", text: "continue_with" }
+    );
+    google.accounts.id.prompt(); 
+  }
+  initializeGoogleSignIn() {
+    google.accounts.id.initialize({
+      client_id: environment.googleConfig.apiKey,
+      callback: this.handleCredentialResponse.bind(this)
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("googleLoginButton"),
+      { theme: "outline", size: "large", text: "continue_with" }
+    );
+    
+    google.accounts.id.prompt(); 
+  }
+  handleCredentialResponse(response: any) {
+    const ask$ = this.http.post(environment.apiURL+"/auth/google",response).pipe(
+        map((result:any) => {this.validGauth(result)}), catchError(err => throwError(err))
+    )
+    ask$.subscribe();
+  }
+  googleSignin(googleWrapper: any) {
+    googleWrapper.click();
+  }
+  validGauth(res) {
+    this.jwtAuth.setUserAndToken(res.token,res.user,true);
+    this.router.navigateByUrl(this.jwtAuth.return);
+    this.isLoading = false;
+  }
+  //CUSTOM AUTH
   onSubmit() {
     if (this.signupForm.valid) {
       const signinData = this.signupForm.value;
@@ -77,6 +141,7 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  
   autoSignIn() {
     if (this.jwtAuth.return === '/') {
       return;

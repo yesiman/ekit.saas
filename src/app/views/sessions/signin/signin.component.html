@@ -51,12 +51,16 @@
           <egret-divider text="OR" class="my-10"></egret-divider>
 
           <div class="flex flex-col gap-4">
-            <button mat-stroked-button type="button" class="w-full !bg-card py-2 flex justify-center items-center gap-2">
+
+
+            <!--<button mat-stroked-button type="button" class="w-full !bg-card py-2 flex justify-center items-center gap-2">
               <mat-icon svgIcon="eg_google" aria-hidden="false"></mat-icon>
               <span>Sign in with Google</span>
-            </button>
+            </button>-->
 
-            <button mat-stroked-button type="button" class="w-full !bg-card py-2 flex justify-center items-center gap-2">
+            <app-google-signin  (loginWithGoogle)="googleSignin($event)"></app-google-signin>
+
+            <!--<button mat-stroked-button type="button" class="w-full !bg-card py-2 flex justify-center items-center gap-2">
               <mat-icon svgIcon="eg_meta" aria-hidden="false"></mat-icon>
               <span>Sign in with Meta</span>
             </button>
@@ -64,7 +68,7 @@
             <button mat-stroked-button type="button" class="w-full !bg-card py-2 flex justify-center items-center gap-2">
               <mat-icon svgIcon="eg_apple" aria-hidden="false"></mat-icon>
               <span>Sign in with Apple</span>
-            </button>
+            </button>-->
 
           </div>
 

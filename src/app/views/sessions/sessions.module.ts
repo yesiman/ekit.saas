@@ -20,6 +20,7 @@ import { Signin2Component } from './signin2/signin2.component';
 import { commonMaterialModules, allMaterialModules } from 'app/shared/material-imports';
 import { DividerComponent } from 'app/shared/components/divider/divider.component';
 import { ForgotPassword2Component } from './forgot-password2/forgot-password2.component';
+import { GoogleSigninComponent } from './signin/google-signin/google-signin.component';
 
 @NgModule({
   imports: [
@@ -31,9 +32,11 @@ import { ForgotPassword2Component } from './forgot-password2/forgot-password2.co
     ...allMaterialModules,
     PerfectScrollbarModule,
     DividerComponent,
+    GoogleSigninComponent,
     RouterModule.forChild(SessionsRoutes)
   ],
   declarations: [
+    
     ForgotPasswordComponent,
     ForgotPassword2Component,
     LockscreenComponent, 

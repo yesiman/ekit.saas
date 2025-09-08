@@ -5,7 +5,8 @@
     [rowData]="rowData"
     [columnDefs]="colDefs" 
     (gridReady)="onGridReady($event)" 
-    [pagination]="true"></ag-grid-angular>
+    [pagination]="true" 
+    (paginationChanged)="onPaginationChanged($event)"></ag-grid-angular>
 
 </div>
 

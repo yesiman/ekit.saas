@@ -118,7 +118,7 @@ export class JwtAuthService {
   }
   //UPDATE USER DATA AFTER LOGIN
   setUserAndToken(token: String, user: User, isAuthenticated: Boolean) {
-    console.log(user);
+    //console.log(token,user);
     this.isAuthenticated = isAuthenticated;
     this.token = token;
     this.user = user;

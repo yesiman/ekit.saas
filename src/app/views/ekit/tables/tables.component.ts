@@ -68,6 +68,8 @@ export class TablesComponent {
     this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project, tableUID:this.globalService.table, coordinates:"Y" })
       .pipe(
         map((res: any) => {
+          console.log(res);
+          //this.gridApi.setRowCount();
           return res.result.map(item => ({
                 ...item.body
             }));
@@ -76,7 +78,9 @@ export class TablesComponent {
           return throwError(error);
         })
     ).subscribe((data) => {
+
       console.log("lines",data);
+
       this.rowData = data;
       setTimeout(() => {
         //const allColumnIds = this.gridApi.getColumns()?.map(col => col.getColId());
@@ -88,12 +92,38 @@ export class TablesComponent {
   // MANAGE CELL EDITOR STYLE FROM PROPERTY TYPE
   getCellEditorTemplate(ptype:string) {
     switch (ptype) {
-      //SELECT
+      //SELECT / ENUMS
       case "5912f82d4c3181110079e0a6":
         return 'agSelectCellEditor';
       // TEXTE BASIC
       case "5912f7034c3181110079e09e":
         return EditableTextCellTranslate;
+    }
+    return null;
+  }
+  // MANAGE CELL ENUMS IDS PARAMS
+  getCellEditorTemplateParams(colItem:any,categoriesLines:any[]) {
+    //ON TEST LE PTYPE DE L'ELEMENT
+    switch (colItem.body.ptype) {
+      // LIEN INTERPROFIL
+      case "5912f82d4c3181110079e0a6":
+        const filteredCategoriesLines = categoriesLines.filter(item => (item.curProto == colItem.config.categid));
+        console.log("kkk",Object.fromEntries(filteredCategoriesLines.map(item => [item._id.toString(), item.body.p5b5ea8fd0311784a87b6dc0a])));
+        return (filteredCategoriesLines.map(item => {
+          return item._id;
+         }))
+    }
+    return null;
+  }
+  // MANAGE CELL ENUMS IDS PARAMS RELATIONS WITH LABELS
+  getCellEditorTemplateValueFormater(colItem:any,categoriesLines:any[]) {
+    //ON TEST LE PTYPE DE L'ELEMENT
+    switch (colItem.body.ptype) {
+      // LIEN INTERPROFIL
+      case "5912f82d4c3181110079e0a6":
+        const filteredCategoriesLines = categoriesLines.filter(item => (item.curProto == colItem.config.categid));
+        const withEmplyVal = filteredCategoriesLines
+        return Object.fromEntries(filteredCategoriesLines.map(item => [item._id.toString(), item.body.p5b5ea8fd0311784a87b6dc0a]));
     }
     return null;
   }
@@ -107,7 +137,12 @@ export class TablesComponent {
     }
     return null;
   }
-
+  onPaginationChanged(event: any) {
+    if (event.newPage) {
+      alert(event.newPage);
+      //this.loadPage(event.api.paginationGetCurrentPage());
+    }
+  }
   // HERE WHEN GRID IS LOADED WHE CAN LOAD COLUMS
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
@@ -128,15 +163,17 @@ export class TablesComponent {
                 pinned: (item.specifics[this.globalService.project+this.globalService.table].isTitleCol=='true'?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
                 //POUR TEST A INJECTER SI C'est un select
-                cellEditorParams: {
-                  values: ['5c332ad107c805cd14cedce0', '63d3a9cf57b89777b490f52a'],
+                cellEditorParams:{
+                  values: this.getCellEditorTemplateParams(item,res.categoriesLines)
                 },
                 valueFormatter: (params: any) => {
-                  const map: Record<string, string> = {
-                    '5c332ad107c805cd14cedce0': 'pdf',
-                    '63d3a9cf57b89777b490f52a': 'word',
-                  };
-                  return map[params.value] || params.value;
+                  const obj = this.getCellEditorTemplateValueFormater(item,res.categoriesLines);
+                  if (obj)
+                  {
+                    const map: Record<string, string> = {"":"",...obj};
+                    return map[params.value] || params.value;
+                  }
+                  else {return null;}
                 }
             }));
           }),

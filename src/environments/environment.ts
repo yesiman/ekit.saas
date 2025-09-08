@@ -7,5 +7,8 @@ import { config } from "config";
 
 export const environment = {
   production: false,
-  apiURL: config.apiUrl
+  apiURL: config.apiUrl,
+  googleConfig:{
+    apiKey:"435857895043-69cc44aik669cm88r679but300il9apk.apps.googleusercontent.com"
+  }
 };
