@@ -5,12 +5,13 @@ import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { environment } from 'environments/environment';
 import { catchError, map, throwError } from 'rxjs';
 import { themeBalham } from 'ag-grid-community';
-import { ActionCellRendererComponent } from '../components/action-cell-renderer.component';
-import { EditableTextCellTranslate } from '../components/editable-text-cell-translate.component';
+import { ActionCellRendererComponent } from '../../../shared/components/_ekit/grid/action-cell-renderer.component';
+import { EditableTextCellTranslate } from '../../../shared/components/_ekit/grid/editable-text-cell-translate.component';
 import { ActivatedRoute } from '@angular/router';
-import { GlobalService } from 'app/shared/services/ekit/global.service';
+import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { CommonModule } from '@angular/common';
-import { EditableRelationCell } from '../components/editable-relation-cell.component copy';
+import { EditableRelationCell } from '../../../shared/components/_ekit/grid/editable-relation-cell.component copy';
+import { FormsModule } from '@angular/forms';
 
 // Row Data Interface
 interface IRow {
@@ -28,6 +29,7 @@ interface IRow {
   selector: 'app-tables',
   imports: [
     CommonModule,
+    FormsModule,
     AgGridAngular,
   ],
   templateUrl: './tables.component.html',

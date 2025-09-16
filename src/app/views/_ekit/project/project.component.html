@@ -1,0 +1,84 @@
+<mat-card class="p-0">
+    <mat-card-title class="">
+        <div class="card-title-text pl-4 rtl:pr-4 py-3">Form validation</div>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content class="!pt-4">
+        <form [formGroup]="basicForm">
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-1/2 md:pr-6">
+                    <div class="!pb-4">
+                        <mat-form-field class="full-width">
+                            <input
+                            matInput
+                            name="title"
+                            formControlName="title"
+                            placeholder="Title (Min Length: 4, Max Length: 100)"
+                            value="">
+                        </mat-form-field>
+                        <small 
+                        *ngIf="basicForm.controls['title'].hasError('minlength') && basicForm.controls['title'].touched" 
+                        class="form-error-msg"> Title require at least {{basicForm.controls['title'].errors.minlength.requiredLength}} characters </small>
+                        <small 
+                        *ngIf="basicForm.controls['title'].hasError('maxlength') && basicForm.controls['title'].touched" 
+                        class="form-error-msg"> Title can not contain more than {{basicForm.controls['title'].errors.maxlength.requiredLength}} characters </small>
+                    </div>
+
+                    <div class="!pb-4">
+                        <mat-form-field class="full-width">
+                            <textarea
+                            matInput
+                            name="description"
+                            formControlName="description"
+                            placeholder="First name"
+                            value="">
+                        </textarea>
+                        </mat-form-field>
+                        <small 
+                        *ngIf="basicForm.controls['description'].hasError('required') && basicForm.controls['description'].touched" 
+                        class="form-error-msg"> Description is required </small>
+                    </div>
+
+                    
+
+                    <div class="!pb-4">
+                        <mat-form-field class="full-width">
+                        <input
+                            matInput
+                            name="website"
+                            formControlName="website"
+                            placeholder="Your Website (http://mhrafi.com)"
+                            value="">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="!pb-4">
+                        <mat-form-field class="full-width">
+                            <input 
+                            matInput
+                            name="date"
+                            formControlName="date"
+                            placeholder="Date" 
+                            [matDatepicker]="appDatepicker">
+                            
+                            <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
+                        </mat-form-field>
+                        <mat-datepicker #appDatepicker></mat-datepicker>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2">
+                    <ag-grid-angular 
+                        [theme]="agGridTheme"
+                        [rowData]="rowData"
+                        [columnDefs]="colDefs" ></ag-grid-angular>
+                </div>
+            </div>
+            <button 
+            mat-raised-button 
+            color="primary" 
+            [disabled]="basicForm.invalid">Submit</button>
+        </form>
+    </mat-card-content>
+</mat-card>
+

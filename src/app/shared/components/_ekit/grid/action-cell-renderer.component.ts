@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { GlobalService } from 'app/shared/services/ekit/global.service';
+import { GlobalService } from 'app/shared/services/_ekit/global.service';
 
 @Component({
   selector: 'app-action-cell-renderer',

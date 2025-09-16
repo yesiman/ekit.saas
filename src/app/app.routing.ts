@@ -72,7 +72,7 @@ export const rootRouterConfig: Routes = [
       },
       {
         path: 'ekit',
-        loadChildren: () => import('./views/ekit/ekit.module').then(m => m.AppEkitModule),
+        loadChildren: () => import('./views/_ekit/ekit.module').then(m => m.AppEkitModule),
         data: { title: 'Ekit', breadcrumb: 'EKIT'}
       },
       {
