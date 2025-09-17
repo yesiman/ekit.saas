@@ -56,20 +56,20 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
     this.http.post(`${environment.apiURL}/datas/get`, { projectsUIDs:(this.jwtAuth.user as any).projects })
       .pipe(
         map((res: any) => {
-          console.log(res);
           return res.result.map(item => ({
                 name: item.name,
                 type: "project",
+                langs:item.langs,
                 uid:item.id,
                 icon:"list"
           }));
+
         }),
         catchError((error) => {
           return throwError(error);
         })
     ).subscribe((data) => {
       //Création de la liste des projets
-      console.log(data);
       this.menuItems = [  
           {
             name: "Projects",

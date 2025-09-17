@@ -12,6 +12,7 @@ import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { CommonModule } from '@angular/common';
 import { EditableRelationCell } from '../../../shared/components/_ekit/grid/editable-relation-cell.component copy';
 import { FormsModule } from '@angular/forms';
+import { ApisService } from 'app/shared/services/_ekit/apis.service';
 
 // Row Data Interface
 interface IRow {
@@ -42,7 +43,7 @@ export class TablesComponent {
   gridApi;
   loading = true;
   constructor(
-    private http: HttpClient,public globalService:GlobalService
+    private http: HttpClient,public globalService:GlobalService,private apisServices:ApisService
   ) {
    
   }
@@ -53,7 +54,7 @@ export class TablesComponent {
       this.loading = true;
       this.rowData = [];
       this.colDefs = [];
-      this.globalService.project = routeParams.projectuid;
+      
       this.globalService.table = (routeParams.tableuid?routeParams.tableuid:null);
       setTimeout(() => {
         this.loading = false;          // recrée la grille
@@ -67,7 +68,7 @@ export class TablesComponent {
 
   // LOAD PAGINATING DATAS
   loadPage() {
-    this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project, tableUID:this.globalService.table, coordinates:"Y" })
+    this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project.uid, tableUID:this.globalService.table, coordinates:"Y" })
       .pipe(
         map((res: any) => {
           console.log(res);
@@ -152,8 +153,7 @@ export class TablesComponent {
     //
     if (this.globalService.table) {
       // IF SELECTED TABLE LOAD DYNAMIC COLUMS
-      this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project, tableUID:this.globalService.table, coordinates:"X" })
-        .pipe(
+      this.apisServices.getDynamicTableColumns().pipe(
           map((res: any) => {
             console.log("res",res);
             return res.result.map(item => ({
@@ -162,7 +162,7 @@ export class TablesComponent {
                 cellRenderer: this.getCellRendererTemplate(item.body.ptype),
                 editable:true,
                 //Si c'est la colonne titre on la fige a gauche
-                pinned: (item.specifics[this.globalService.project+this.globalService.table].isTitleCol=='true'?"left":'none'),
+                pinned: (item.specifics[this.globalService.project.uid+this.globalService.table].isTitleCol=='true'?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
                 //POUR TEST A INJECTER SI C'est un select
                 cellEditorParams:{
@@ -198,7 +198,7 @@ export class TablesComponent {
       })
     }
     else {
-      // IF SELECTED TABLE DISPLAY STATIC COLUMNS
+      // IF ! SELECTED TABLE DISPLAY STATIC COLUMNS
       this.colDefs = [
         { field: "body.plib",headerName: 'Titre',pinned: 'left', 
           editable: true ,
@@ -213,7 +213,7 @@ export class TablesComponent {
           filter: false,pinned: 'right'},
       ];
       // LOADIN PROJECTS TABLES
-      this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project })
+      this.apisServices.getProjectTables()
         .pipe(
           map((res: any) => {
             return res.result;

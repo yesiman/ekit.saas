@@ -103,6 +103,8 @@ export class JwtAuthService {
 
   public signout() {
     this.setUserAndToken(null, null, false);
+    //on vide le projet en cours
+    this.ls.setItem("currentProject",null);
     this.router.navigateByUrl("sessions/signin");
   }
 

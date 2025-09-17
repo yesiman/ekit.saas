@@ -6,13 +6,13 @@
   >
     <ul class="breadcrumb">
       <li>
-        <a>{{globalService.project}}</a>
+        <a>{{globalService.project.name}}</a>
       </li>
       <li *ngIf="!globalService.table">
         <a>Tables</a>
       </li>
       <li *ngIf="globalService.table">
-        <a routerLink="/ekit/tables/{{globalService.project}}">Tables</a>
+        <a routerLink="/ekit/tables/{{globalService.project.uid}}">Tables</a>
       </li>
       <li *ngIf="globalService.table">
         <a>{{globalService.table}}</a>

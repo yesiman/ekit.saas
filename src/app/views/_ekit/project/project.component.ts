@@ -14,6 +14,7 @@ import { MatRadioModule as MatRadioModule } from '@angular/material/radio';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AgGridAngular } from 'ag-grid-angular';
 import { themeBalham, type ColDef, type GridReadyEvent } from 'ag-grid-community';
+import langs from 'assets/ressources/langs.json'
 
 @Component({
     selector: 'app-project',
@@ -42,27 +43,28 @@ export class ProjectComponent implements OnInit {
   console = console;
   basicForm: UntypedFormGroup;
 
-  rowData = [
-        { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-        { make: "Ford", model: "F-Series", price: 33850, electric: false },
-        { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-    ];
-
     // Column Definitions: Defines the columns to be displayed.
     colDefs: ColDef[] = [
-        { field: "make" },
-        { field: "model", type:boolean },
-        { field: "price" },
-        { field: "electric" }
+        { field: "actif", type:"boolean",filter: "agTextColumnFilter",
+          sortable: true,editable:true,
+          pinned: 'left'},
+        { field: "code",filter: "agTextColumnFilter" },
+        { field: "name",filter: "agTextColumnFilter" },
+        { field: "Drapeau" }
     ];
-
+    rowData=[];
     agGridTheme = themeBalham;
   constructor() { }
   
   ngOnInit() {
-    let password = new UntypedFormControl('', Validators.required);
-    let confirmPassword = new UntypedFormControl('');
-
+    //this.rowData = langs.default;
+    
+    this.rowData = langs.map(lang => {
+      return {
+        actif:false,
+        ...lang
+      }
+    });
     this.basicForm = new UntypedFormGroup({
       title: new UntypedFormControl('', [
         Validators.minLength(4),

@@ -1,15 +1,29 @@
 import { Injectable } from '@angular/core';
+import { LocalStoreService } from '../local-store.service';
 
 @Injectable({
   providedIn: 'root'  // Singleton accessible partout
 })
+
+/*export class project {
+  uid?:string;
+  title?:string;
+  constructor(
+  ) {}
+}*/
+
 export class GlobalService {
+  constructor(private ls:LocalStoreService) {}
   //project storage
-  private _project: string = '';
-  get project(): string {
+  private _project: any;
+  get project(): any {
+    //SI ON A PAS LE PROJET ON LE LOAD DU LOCALSERVICE
+    if (!this._project) {
+      this._project = this.ls.getItem("currentProject");
+    }
     return this._project;
   }
-  set project(value: string) {
+  set project(value: any) {
     this._project = value;
   }
   //table storage

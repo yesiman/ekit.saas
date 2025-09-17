@@ -29,7 +29,7 @@
       <div class="nav-item-sep" *ngIf="item.type === 'separator'">
         <mat-divider></mat-divider>
         <span class="text-sidebar-text">{{item.name | translate}}
-          <mat-icon *ngIf="item.addMoreButton" class="text-sidebar-text icon-separator-add" title="Ajouter un projet">add</mat-icon>
+          <mat-icon routerLink="/ekit/project/-1" *ngIf="item.addMoreButton" class="text-sidebar-text icon-separator-add" title="Ajouter un projet">add</mat-icon>
         </span>
         
       </div>
@@ -65,7 +65,7 @@
         </a>
 
         <!-- Project item -->
-        <a *ngIf="item.type === 'project'" (click)="loadProject(item.uid)">
+        <a *ngIf="item.type === 'project'" (click)="loadProject(item)">
           <mat-icon *ngIf="item.icon" class="sidenav-mat-icon text-sidebar-text">{{item.icon}}</mat-icon>
           <mat-icon *ngIf="item.svgIcon" [svgIcon]="item.svgIcon" class="svgIcon text-sidebar-text"></mat-icon>
           <span class="item-name text-sidebar-text lvl1">{{item.name | translate}}</span>

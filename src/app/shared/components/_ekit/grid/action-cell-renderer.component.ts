@@ -52,7 +52,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
   }
 
   onList() {
-    this.router.navigate(["/ekit/tables/"+this.globalService.project+"/"+this.params.data._id]);
+    this.router.navigate(["/ekit/tables/"+this.globalService.project.uid+"/"+this.params.data._id]);
   }
 
   onEdit() {

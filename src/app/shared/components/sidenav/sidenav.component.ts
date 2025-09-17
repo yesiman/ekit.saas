@@ -9,6 +9,8 @@ import { DropdownLinkDirective } from '../../directives/dropdown-link.directive'
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { GlobalService } from 'app/shared/services/_ekit/global.service';
+import { LocalStoreService } from 'app/shared/services/local-store.service';
 
 @Component({
     selector: 'app-sidenav',
@@ -37,16 +39,17 @@ export class SidenavComponent {
   
 
 
-  constructor() {
+  constructor(public globalService:GlobalService,private ls:LocalStoreService) {
       
   }
   ngOnInit() {
   }
   ngAfterViewInit() {}
 
-  loadProject(uid) {
+  loadProject(prj) {
     //ON LOAD LE PROJET SELECTIONNE
-    this.router.navigate(["/ekit/tables/"+uid]);
+    this.ls.setItem("currentProject",prj)
+    this.router.navigate(["/ekit/tables/",prj.uid]);
   }
 
 }
