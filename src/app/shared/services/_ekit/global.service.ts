@@ -1,29 +1,25 @@
 import { Injectable } from '@angular/core';
 import { LocalStoreService } from '../local-store.service';
+import { Project } from 'app/shared/models/_ekit/product.model';
 
 @Injectable({
   providedIn: 'root'  // Singleton accessible partout
 })
 
-/*export class project {
-  uid?:string;
-  title?:string;
-  constructor(
-  ) {}
-}*/
+
 
 export class GlobalService {
   constructor(private ls:LocalStoreService) {}
   //project storage
-  private _project: any;
-  get project(): any {
+  private _project: Project;
+  get project(): Project {
     //SI ON A PAS LE PROJET ON LE LOAD DU LOCALSERVICE
     if (!this._project) {
       this._project = this.ls.getItem("currentProject");
     }
     return this._project;
   }
-  set project(value: any) {
+  set project(value: Project) {
     this._project = value;
   }
   //table storage

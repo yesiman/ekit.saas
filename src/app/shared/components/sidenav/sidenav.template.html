@@ -65,19 +65,21 @@
         </a>
 
         <!-- Project item -->
-        <a *ngIf="item.type === 'project'" (click)="loadProject(item)">
+        <a *ngIf="item.type === 'project'">
           <mat-icon *ngIf="item.icon" class="sidenav-mat-icon text-sidebar-text">{{item.icon}}</mat-icon>
           <mat-icon *ngIf="item.svgIcon" [svgIcon]="item.svgIcon" class="svgIcon text-sidebar-text"></mat-icon>
-          <span class="item-name text-sidebar-text lvl1">{{item.name | translate}}</span>
+          <span class="item-name text-sidebar-text lvl1"  (click)="loadProject(item)">{{item.name | translate}}</span>
           <span class="flex-grow"></span>
           <span class="menuitem-badge mat-bg-{{ badge.color }}" [ngStyle]="{background: badge.color}"
             *ngFor="let badge of item.badges">{{ badge.value }}</span>
+              <mat-icon routerLink="/ekit/project/{{item.uid}}" class="text-sidebar-text icon-separator-add" title="Editer un projet">edit</mat-icon>
         </a>
 
         <!-- recursive call -->
         <div *ngIf="item.type === 'dropDown'">
           <ng-container *ngTemplateOutlet="menuTemplate; context: {menuItems: item.sub}"></ng-container>
         </div>
+
 
 
       </div>

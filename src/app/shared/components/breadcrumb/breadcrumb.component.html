@@ -12,7 +12,7 @@
         <a>Tables</a>
       </li>
       <li *ngIf="globalService.table">
-        <a routerLink="/ekit/tables/{{globalService.project.uid}}">Tables</a>
+        <a routerLink="/ekit/tables/{{globalService.project._id}}">Tables</a>
       </li>
       <li *ngIf="globalService.table">
         <a>{{globalService.table}}</a>

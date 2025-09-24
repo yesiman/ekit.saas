@@ -13,6 +13,11 @@ import { CommonModule } from '@angular/common';
 import { EditableRelationCell } from '../../../shared/components/_ekit/grid/editable-relation-cell.component copy';
 import { FormsModule } from '@angular/forms';
 import { ApisService } from 'app/shared/services/_ekit/apis.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
 
 // Row Data Interface
 interface IRow {
@@ -32,6 +37,11 @@ interface IRow {
     CommonModule,
     FormsModule,
     AgGridAngular,
+    MatIconModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatInputModule
   ],
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.scss',
@@ -68,7 +78,7 @@ export class TablesComponent {
 
   // LOAD PAGINATING DATAS
   loadPage() {
-    this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project.uid, tableUID:this.globalService.table, coordinates:"Y" })
+    this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table, coordinates:"Y" })
       .pipe(
         map((res: any) => {
           console.log(res);
@@ -162,7 +172,7 @@ export class TablesComponent {
                 cellRenderer: this.getCellRendererTemplate(item.body.ptype),
                 editable:true,
                 //Si c'est la colonne titre on la fige a gauche
-                pinned: (item.specifics[this.globalService.project.uid+this.globalService.table].isTitleCol=='true'?"left":'none'),
+                pinned: (item.specifics[this.globalService.project._id+this.globalService.table].isTitleCol=='true'?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
                 //POUR TEST A INJECTER SI C'est un select
                 cellEditorParams:{

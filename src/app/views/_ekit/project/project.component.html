@@ -12,6 +12,7 @@
                             <input
                             matInput
                             name="title"
+                            [(ngModel)]="_project.body.plib" 
                             formControlName="title"
                             placeholder="Title (Min Length: 4, Max Length: 100)"
                             value="">
@@ -27,7 +28,8 @@
                     <div class="!pb-4">
                         <mat-form-field class="full-width">
                             <textarea
-                            matInput
+                            matInput 
+                            [(ngModel)]="_project.body.pdesc" 
                             name="description"
                             formControlName="description"
                             placeholder="First name"
@@ -75,9 +77,9 @@
                 </div>
             </div>
             <button 
-            mat-raised-button 
-            color="primary" 
-            [disabled]="basicForm.invalid">Submit</button>
+                mat-raised-button 
+                color="primary" 
+                [disabled]="basicForm.invalid" (click)="valid()">Submit</button>
         </form>
     </mat-card-content>
 </mat-card>
