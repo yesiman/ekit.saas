@@ -7,7 +7,7 @@ import { catchError, map, throwError } from 'rxjs';
 import { themeBalham } from 'ag-grid-community';
 import { ActionCellRendererComponent } from '../../../shared/components/_ekit/grid/action-cell-renderer.component';
 import { EditableTextCellTranslate } from '../../../shared/components/_ekit/grid/editable-text-cell-translate.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { CommonModule } from '@angular/common';
 import { EditableRelationCell } from '../../../shared/components/_ekit/grid/editable-relation-cell.component copy';
@@ -41,7 +41,8 @@ interface IRow {
     MatMenuModule,
     MatCheckboxModule,
     MatToolbarModule,
-    MatInputModule
+    MatInputModule,
+    RouterModule
   ],
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.scss',
@@ -64,7 +65,6 @@ export class TablesComponent {
       this.loading = true;
       this.rowData = [];
       this.colDefs = [];
-      
       this.globalService.table = (routeParams.tableuid?routeParams.tableuid:null);
       setTimeout(() => {
         this.loading = false;          // recrée la grille
@@ -76,9 +76,12 @@ export class TablesComponent {
   colDefs: ColDef[] = [];
   agGridTheme = themeBalham;
 
-  // LOAD PAGINATING DATAS
+  /** 
+   * LOAD PAGINATING DATAS
+   * */ 
   loadPage() {
-    this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table, coordinates:"Y" })
+    
+    this.http.post(`${environment.apiURL}/datas/fr`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table, coordinates:"Y" })
       .pipe(
         map((res: any) => {
           console.log(res);
@@ -92,8 +95,6 @@ export class TablesComponent {
         })
     ).subscribe((data) => {
 
-      console.log("lines",data);
-
       this.rowData = data;
       setTimeout(() => {
         //const allColumnIds = this.gridApi.getColumns()?.map(col => col.getColId());
@@ -102,7 +103,9 @@ export class TablesComponent {
     })
   }
 
-  // MANAGE CELL EDITOR STYLE FROM PROPERTY TYPE
+  /** 
+   * MANAGE CELL EDITOR STYLE FROM PROPERTY TYPE
+   * */ 
   getCellEditorTemplate(ptype:string) {
     switch (ptype) {
       //SELECT / ENUMS
@@ -114,7 +117,9 @@ export class TablesComponent {
     }
     return null;
   }
-  // MANAGE CELL ENUMS IDS PARAMS
+  /** 
+   * MANAGE CELL ENUMS IDS PARAMS
+   * */ 
   getCellEditorTemplateParams(colItem:any,categoriesLines:any[]) {
     //ON TEST LE PTYPE DE L'ELEMENT
     switch (colItem.body.ptype) {
@@ -128,7 +133,9 @@ export class TablesComponent {
     }
     return null;
   }
-  // MANAGE CELL ENUMS IDS PARAMS RELATIONS WITH LABELS
+  /** 
+   * MANAGE CELL ENUMS IDS PARAMS RELATIONS WITH LABELS
+   * */ 
   getCellEditorTemplateValueFormater(colItem:any,categoriesLines:any[]) {
     //ON TEST LE PTYPE DE L'ELEMENT
     switch (colItem.body.ptype) {
@@ -140,7 +147,9 @@ export class TablesComponent {
     }
     return null;
   }
-  // MANAGE CELL RENDER STYLE FROM PROPERTY TYPE
+  /** 
+   * MANAGE CELL RENDER STYLE FROM PROPERTY TYPE
+   * */ 
   getCellRendererTemplate(ptype:string) {
     
     switch (ptype) {
@@ -163,7 +172,7 @@ export class TablesComponent {
     //
     if (this.globalService.table) {
       // IF SELECTED TABLE LOAD DYNAMIC COLUMS
-      this.apisServices.getDynamicTableColumns().pipe(
+      this.apisServices.getDynamicTableColumns("fr").pipe(
           map((res: any) => {
             console.log("res",res);
             return res.result.map(item => ({
@@ -172,7 +181,7 @@ export class TablesComponent {
                 cellRenderer: this.getCellRendererTemplate(item.body.ptype),
                 editable:true,
                 //Si c'est la colonne titre on la fige a gauche
-                pinned: (item.specifics[this.globalService.project._id+this.globalService.table].isTitleCol=='true'?"left":'none'),
+                pinned: (item.specifics && item.specifics[this.globalService.project._id+this.globalService.table].isTitleCol=='true'?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
                 //POUR TEST A INJECTER SI C'est un select
                 cellEditorParams:{
@@ -223,7 +232,7 @@ export class TablesComponent {
           filter: false,pinned: 'right'},
       ];
       // LOADIN PROJECTS TABLES
-      this.apisServices.getProjectTables()
+      this.apisServices.getProjectTables("fr")
         .pipe(
           map((res: any) => {
             return res.result;

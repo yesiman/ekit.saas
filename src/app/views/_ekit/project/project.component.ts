@@ -1,46 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule as MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule as MatCheckboxModule } from '@angular/material/checkbox';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule as MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressBarModule as MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatRadioModule as MatRadioModule } from '@angular/material/radio';
-import { MatStepperModule } from '@angular/material/stepper';
-import { AgGridAngular } from 'ag-grid-angular';
-import { themeBalham, type ColDef, type GridReadyEvent } from 'ag-grid-community';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { themeBalham, type ColDef } from 'ag-grid-community';
 import langs from 'assets/ressources/langs.json'
-import { LocalStoreService } from 'app/shared/services/local-store.service';
 import { ActivatedRoute } from '@angular/router';
 import { ApisService } from 'app/shared/services/_ekit/apis.service';
-import { Project } from 'app/shared/models/_ekit/product.model';
+import { Project } from 'app/shared/models/_ekit/project.model';
 
 @Component({
     selector: 'app-project',
     templateUrl: './project.component.html',
     styleUrls: ['./project.component.scss'],
-    imports: [
-      CommonModule,
-      MatInputModule,
-      MatListModule,
-      MatCardModule,
-      MatDatepickerModule,
-      MatNativeDateModule,
-      MatProgressBarModule,
-      MatRadioModule,
-      MatCheckboxModule,
-      MatButtonModule,
-      MatIconModule,
-      MatStepperModule,
-      ReactiveFormsModule,
-      AgGridAngular
-    ],
-    standalone:true
+    standalone:false
 })
 export class ProjectComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -60,9 +30,9 @@ export class ProjectComponent implements OnInit {
       { field: "Drapeau" }
   ];
   rowData=[];
-  agGridTheme = themeBalham;
-  projectUID:string = "-1";
-  constructor(private ls:LocalStoreService,private apisService:ApisService) { }
+  agGridTheme = themeBalham.withParams({fontFamily: 'Poppins',});
+
+  constructor(private apisService:ApisService) { }
   
   isLangSelected(langCode:string):boolean {
     const findResult = this._project.langs.find(lang => { return (lang == langCode)});
@@ -95,18 +65,19 @@ export class ProjectComponent implements OnInit {
       date: new UntypedFormControl(),
     })
   }
-
+/**
+ * 
+ */
   ngOnInit() {
     //SI ID == -1
     this.route.params.subscribe(routeParams => {
       if (routeParams.projectuid == "-1") {
         this._project = new Project();
-        this.projectUID = "-1";
+        this._project._id = "-1";
         this.console.log(this._project);
         this.initializeDataComp();
       } else {
-        this.projectUID = routeParams.projectuid;
-        this.apisService.getProject(this.projectUID).subscribe((data:any) => {
+        this.apisService.getProject(routeParams.projectuid,"fr").subscribe((data:any) => {
           this._project = data.result;
           //this.console.log(this._project);
           this.initializeDataComp();
@@ -116,12 +87,13 @@ export class ProjectComponent implements OnInit {
     
     
   }
+  /**
+   * 
+   */
   valid() {
-    const selectedLangs = this.rowData.filter(row => row.actif );
-    this._project._id = this.projectUID;
-    this._project.langs = selectedLangs.map(row => { return row.code } );
-    this.console.log("data",this._project);    
-    this.apisService.saveProject(this._project).subscribe((data) => {
+    // FILTER ON CHECKED AND GET LANG CODES
+    this._project.langs = this.rowData.filter(row => row.actif ).map(row => { return row.code } );
+    this.apisService.save(this._project,"projects","fr").subscribe((data) => {
       this.console.log("data",data);
     });
   }

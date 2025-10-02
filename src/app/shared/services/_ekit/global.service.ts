@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalStoreService } from '../local-store.service';
-import { Project } from 'app/shared/models/_ekit/product.model';
+import { Project } from 'app/shared/models/_ekit/project.model';
 
 @Injectable({
   providedIn: 'root'  // Singleton accessible partout

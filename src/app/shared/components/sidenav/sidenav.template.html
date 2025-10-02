@@ -72,7 +72,7 @@
           <span class="flex-grow"></span>
           <span class="menuitem-badge mat-bg-{{ badge.color }}" [ngStyle]="{background: badge.color}"
             *ngFor="let badge of item.badges">{{ badge.value }}</span>
-              <mat-icon routerLink="/ekit/project/{{item.uid}}" class="text-sidebar-text icon-separator-add" title="Editer un projet">edit</mat-icon>
+              <mat-icon routerLink="/ekit/project/{{item._id}}" class="text-sidebar-text icon-separator-add" title="Editer un projet">edit</mat-icon>
         </a>
 
         <!-- recursive call -->

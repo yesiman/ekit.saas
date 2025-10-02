@@ -3,7 +3,8 @@ import { LocalStoreService } from '../local-store.service';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { GlobalService } from './global.service';
-import { Project } from 'app/shared/models/_ekit/product.model';
+import { Project } from 'app/shared/models/_ekit/project.model';
+import { Iobject } from 'app/shared/models/_ekit/iobject.model';
 
 @Injectable({
   providedIn: 'root'  // Singleton accessible partout
@@ -12,25 +13,24 @@ import { Project } from 'app/shared/models/_ekit/product.model';
 
 export class ApisService {
   constructor(private http: HttpClient,private ls:LocalStoreService,private globalService:GlobalService) {}
-  getDynamicTableColumns = () => {
-    return this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table, coordinates:"X" })
+  getDynamicTableColumns = (lang:string) => {
+    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table, coordinates:"X" })
   }
-  getProjectTables = () => {
-    return this.http.post(`${environment.apiURL}/datas/get`, { projectUID:this.globalService.project._id })
-  }
-
-  getProject = (uid:string) => {
-    return this.http.get(`${environment.apiURL}/projects/`+uid)
+  getProjectTables = (lang:string) => {
+    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id })
   }
 
-  saveProject(project:Project) {
-    if (project._id == "-1") {
-      console.log("saveProject","post");
-      return this.http.post(`${environment.apiURL}/projects/`, project)
+  getProject = (uid:string,lang:string) => {
+    return this.http.get(`${environment.apiURL}/projects/${lang}/`+uid)
+  }
+
+  save = (obj:Iobject,repo:string,lang:string) => {
+    if (obj._id == "-1") {
+      return this.http.post(`${environment.apiURL}/${repo}/${lang}/`, obj)
     } 
     else {
-      console.log("saveProject","put");
-      return this.http.put(`${environment.apiURL}/projects/`+project._id, project)
+      return this.http.put(`${environment.apiURL}/${repo}/${lang}/`+obj._id, obj)
     }
   }
+
 }

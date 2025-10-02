@@ -1,6 +1,6 @@
 <mat-card class="p-0">
     <mat-card-title class="">
-        <div class="card-title-text pl-4 rtl:pr-4 py-3">Project</div>
+        <div class="card-title-text pl-4 rtl:pr-4 py-3">Form validation</div>
     </mat-card-title>
     <mat-divider></mat-divider>
     <mat-card-content class="!pt-4">
@@ -12,7 +12,7 @@
                             <input
                             matInput
                             name="title"
-                            [(ngModel)]="_project.body.plib" 
+                            [(ngModel)]="_table.body.plib" 
                             formControlName="title"
                             placeholder="Title (Min Length: 4, Max Length: 100)"
                             value="">
@@ -29,7 +29,7 @@
                         <mat-form-field class="full-width">
                             <textarea
                             matInput 
-                            [(ngModel)]="_project.body.pdesc" 
+                            [(ngModel)]="_table.body.pdesc" 
                             name="description"
                             formControlName="description"
                             placeholder="First name"
@@ -41,39 +41,26 @@
                         class="form-error-msg"> Description is required </small>
                     </div>
 
-                    
-
                     <div class="!pb-4">
-                        <mat-form-field class="full-width">
-                        <input
-                            matInput
-                            name="website"
-                            formControlName="website"
-                            placeholder="Your Website (http://mhrafi.com)"
-                            value="">
-                        </mat-form-field>
-                    </div>
-
-                    <div class="!pb-4">
-                        <mat-form-field class="full-width">
-                            <input 
-                            matInput
-                            name="date"
-                            formControlName="date"
-                            placeholder="Date" 
-                            [matDatepicker]="appDatepicker">
                             
-                            <mat-datepicker-toggle matSuffix [for]="appDatepicker"></mat-datepicker-toggle>
-                        </mat-form-field>
-                        <mat-datepicker #appDatepicker></mat-datepicker>
                     </div>
+
+                    
                 </div>
 
-                <div class="w-full md:w-1/2">
-                    <ag-grid-angular 
-                        [theme]="agGridTheme"
-                        [rowData]="rowData"
-                        [columnDefs]="colDefs" ></ag-grid-angular>
+                <div class="w-full md:w-1/4">
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox ([ngModel])="_table.specifics[globalService.project._id].sequencable">Séquençable</mat-checkbox>
+                    </div>
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox >Hiérarchique</mat-checkbox>
+                    </div>
+                    
+                </div>
+                <div class="w-full md:w-1/4">
+                    
                 </div>
             </div>
             <button 

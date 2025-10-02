@@ -1,0 +1,20 @@
+[
+  { "code": "5912f7034c3181110079e09e", "name": "Text" },
+  { "code": "5912f7194c3181110079e09f", "name": "Long text" },
+  { "code": "5912f7204c3181110079e0a0", "name": "Rich text" },
+  { "code": "5b33228daf1f20140098fbf8", "name": "Date and time" },
+  { "code": "5912f8194c3181110079e0a5", "name": "Prototype" },
+  { "code": "5912f72e4c3181110079e0a2", "name": "Image" },
+  { "code": "5912f7284c3181110079e0a1", "name": "File" },
+  { "code": "5912f8144c3181110079e0a4", "name": "Boolean" },
+  { "code": "5912f7344c3181110079e0a3", "name": "Localisation" },
+  { "code": "5912f82d4c3181110079e0a6", "name": "Category" },
+  { "code": "5a782af376657811002d0416", "name": "Date" },
+  { "code": "5b59c85a910e411400eed11d", "name": "Time" },
+  { "code": "5b332245af1f20140098fbf6", "name": "Link" },
+  { "code": "5b59c863910e411400eed11f", "name": "Email" },
+  { "code": "5b61ab6f4bfe681400f79ffa", "name": "Multi-choices category" },
+  { "code": "5b766bd26820801400bb1980", "name": "Color" },
+  { "code": "5eddd918c9c28ed25d38a41d", "name": "Multiple files" },
+  { "code": "5e259d0812d6b014d2567f6b", "name": "Tags" }
+]

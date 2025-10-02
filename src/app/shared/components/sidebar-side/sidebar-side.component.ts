@@ -53,14 +53,14 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
     // SI PAS DE PROJET SELECTIONNE
     // ON VA LOADER LES PROJET DE L'UTILISATEUR POUR SELECTION
     // A PASSER DANS LE SERVICE EKIT AVEC observable
-    this.http.post(`${environment.apiURL}/datas/get`, { projectsUIDs:(this.jwtAuth.user as any).projects })
+    this.http.post(`${environment.apiURL}/datas/fr`, { projectsUIDs:(this.jwtAuth.user as any).projects })
       .pipe(
         map((res: any) => {
           return res.result.map(item => ({
                 name: item.name,
                 type: "project",
                 langs:item.langs,
-                uid:item.id,
+                _id:item._id,
                 icon:"list"
           }));
 

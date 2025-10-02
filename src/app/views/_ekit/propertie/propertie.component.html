@@ -1,0 +1,101 @@
+<mat-card class="p-0">
+    <mat-card-title class="">
+        <div class="card-title-text pl-4 rtl:pr-4 py-3">Form validation</div>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content class="!pt-4">
+        <form [formGroup]="basicForm">
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-1/2 md:pr-6">
+                    <div class="!pb-4">
+                        <mat-form-field class="full-width">
+                            <input
+                            matInput
+                            name="title"
+                            [(ngModel)]="_field.body.plib" 
+                            formControlName="title"
+                            placeholder="Title (Min Length: 4, Max Length: 100)"
+                            value="">
+                        </mat-form-field>
+                        <small 
+                        *ngIf="basicForm.controls['title'].hasError('minlength') && basicForm.controls['title'].touched" 
+                        class="form-error-msg"> Title require at least {{basicForm.controls['title'].errors.minlength.requiredLength}} characters </small>
+                        <small 
+                        *ngIf="basicForm.controls['title'].hasError('maxlength') && basicForm.controls['title'].touched" 
+                        class="form-error-msg"> Title can not contain more than {{basicForm.controls['title'].errors.maxlength.requiredLength}} characters </small>
+                    </div>
+
+                    <div class="!pb-4">
+                        <mat-form-field class="full-width">
+                            <textarea
+                            matInput 
+                            [(ngModel)]="_field.body.pdesc" 
+                            name="description"
+                            formControlName="description"
+                            placeholder="First name"
+                            value="">
+                        </textarea>
+                        </mat-form-field>
+                        <small 
+                        *ngIf="basicForm.controls['description'].hasError('required') && basicForm.controls['description'].touched" 
+                        class="form-error-msg"> Description is required </small>
+                    </div>
+
+                    <div class="!pb-4">
+                            <mat-form-field class="full-width">
+                            <mat-label>Select an option</mat-label>
+                            <mat-select [(value)]="_field.body.ptype" name="ptype"
+                                formControlName="ptype">
+                                <mat-option>None</mat-option>
+                                @for (item of datatypes; track item.code) {
+                                    <mat-option value="{{item.code}}">{{item.name}}</mat-option>
+                                }
+                            </mat-select>
+                            
+                            
+                        </mat-form-field>
+                        <small 
+                        *ngIf="basicForm.controls['description'].hasError('required') && basicForm.controls['description'].touched" 
+                        class="form-error-msg"> Description is required </small>
+                    </div>
+
+                    
+                </div>
+
+                <div class="w-full md:w-1/4">
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox >Multilingue</mat-checkbox>
+                    </div>
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox ></mat-checkbox>
+                    </div>
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox >Fixed Header</mat-checkbox>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/4">
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox >Fixed Header</mat-checkbox>
+                    </div>
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox >Fixed Header</mat-checkbox>
+                    </div>
+                    <div class="!pb-4">
+                        <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                        <mat-checkbox >Fixed Header</mat-checkbox>
+                    </div>
+                </div>
+            </div>
+            <button 
+                mat-raised-button 
+                color="primary" 
+                [disabled]="basicForm.invalid" (click)="valid()">Submit</button>
+        </form>
+    </mat-card-content>
+</mat-card>
+
