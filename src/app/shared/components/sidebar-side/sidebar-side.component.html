@@ -11,7 +11,9 @@
                     (click)="toggleCollapse()" *ngIf="layoutConf.sidebarStyle !== 'compact'"><span></span></div>
             </div>
             <!-- Sidebar user -->
+            
             <div class="app-user">
+                <!--
                 <div class="app-user-photo">
                     <img src="assets/images/face-7.jpg" class="mat-elevation-z1" alt="">
                 </div>
@@ -19,6 +21,7 @@
                     <mat-icon class="icon-xs !fill-sidebar-text">lock</mat-icon>
                     {{jwtAuth?.user?.displayName}}
                 </span>
+                -->
                 <!-- Small buttons -->
                 <div class="app-user-controls">
                     <a class="hover:bg-hover" mat-icon-button mat-xs-button [matMenuTriggerFor]="appUserMenu">

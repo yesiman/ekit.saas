@@ -1,12 +1,10 @@
 <div class="sidenav-hold bg-sidebar-bg" #sidenav>
-  <div class="icon-menu mb-4" *ngIf="hasIconTypeMenuItem">
-    <!-- Icon menu separator -->
+  <!--<div class="icon-menu mb-4" *ngIf="hasIconTypeMenuItem">
+    
     <div class="mb-4 nav-item-sep flex flex-col justify-center items-center">
       <mat-divider class="w-[240px]"></mat-divider>
       <span class="text-muted !px-0 text-sidebar-text">{{iconTypeMenuTitle}}</span>
     </div>
-
-    <!-- Icon menu items -->
     <div class="icon-menu-list flex flex-row justify-center">
       <div class="icon-menu-item" *ngFor="let item of menuItems">
         <a *ngIf="!item.disabled && item.type === 'icon'" mat-icon-button
@@ -16,7 +14,7 @@
         </a>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <ng-container *ngTemplateOutlet="menuTemplate; context: {menuItems: menuItems}"></ng-container>
 

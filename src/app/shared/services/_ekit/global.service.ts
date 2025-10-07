@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocalStoreService } from '../local-store.service';
 import { Project } from 'app/shared/models/_ekit/project.model';
+import { Table } from 'app/shared/models/_ekit/table.model';
 
 @Injectable({
   providedIn: 'root'  // Singleton accessible partout
@@ -23,11 +24,11 @@ export class GlobalService {
     this._project = value;
   }
   //table storage
-  private _table: string = '';
-  get table(): string {
+  private _table: Table;
+  get table(): Table {
     return this._table;
   }
-  set table(value: string) {
+  set table(value: Table) {
     this._table = value;
   }
 }

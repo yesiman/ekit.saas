@@ -59,10 +59,12 @@ export class PropertieComponent {
   ngOnInit() {
       //SI ID == -1
       this.route.params.subscribe(routeParams => {
+        
         if (routeParams.fielduid == "-1") {
+          this.console.log(routeParams.fielduid,this.globalService.project._id+this.globalService.table._id);
           this._field = new Field();
           this._field._id = "-1";
-          this._field._projprof.push(this.globalService.project._id+this.globalService.table)
+          this._field._projprof.push(this.globalService.project._id+this.globalService.table._id)
           //this.console.log(this._project);
           this.initializeDataComp();
         } else {

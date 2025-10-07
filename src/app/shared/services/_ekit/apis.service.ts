@@ -14,7 +14,7 @@ import { Iobject } from 'app/shared/models/_ekit/iobject.model';
 export class ApisService {
   constructor(private http: HttpClient,private ls:LocalStoreService,private globalService:GlobalService) {}
   getDynamicTableColumns = (lang:string) => {
-    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table, coordinates:"X" })
+    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table._id, coordinates:"X" })
   }
   getProjectTables = (lang:string) => {
     return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id })
@@ -23,8 +23,11 @@ export class ApisService {
   getProject = (uid:string,lang:string) => {
     return this.http.get(`${environment.apiURL}/projects/${lang}/`+uid)
   }
-
+  getTable = (uid:string,lang:string) => {
+    return this.http.get(`${environment.apiURL}/prototypes/${lang}/`+uid)
+  }
   save = (obj:Iobject,repo:string,lang:string) => {
+    console.log(obj);
     if (obj._id == "-1") {
       return this.http.post(`${environment.apiURL}/${repo}/${lang}/`, obj)
     } 

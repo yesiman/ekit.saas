@@ -10,7 +10,9 @@
     float: left;
 
     &:not(:first-child):before {
-      content: "/\A0";
+      content: "/";
+      /*content: "/\A0";*/
+      font-size: 0.6rem;
       padding: 0 8px;
     }
   }
@@ -26,15 +28,15 @@
     margin-top: .5rem;
 
     li {
-      line-height: 40px;
+      /*line-height: 40px;*/
 
       &:not(:first-child):before {
-        padding: 0 8px;
+        padding: 0 3px;
       }
 
       a {
         font-weight: 400;
-        font-size: 1rem;
+        font-size: 0.8rem;
       }
     }
   }

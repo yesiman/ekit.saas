@@ -1,3 +1,4 @@
+
 <mat-card class="p-0">
     <mat-card-title class="">
         <div class="card-title-text pl-4 rtl:pr-4 py-3">Form validation</div>
@@ -44,7 +45,7 @@
                     <div class="!pb-4">
                             <mat-form-field class="full-width">
                             <mat-label>Select an option</mat-label>
-                            <mat-select [(value)]="_field.body.ptype" name="ptype"
+                            <mat-select [(value)]="_field.body.ptype" [(ngModel)]="_field.body.ptype" name="ptype"
                                 formControlName="ptype">
                                 <mat-option>None</mat-option>
                                 @for (item of datatypes; track item.code) {
@@ -98,4 +99,3 @@
         </form>
     </mat-card-content>
 </mat-card>
-
