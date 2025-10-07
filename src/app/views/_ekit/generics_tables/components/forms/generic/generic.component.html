@@ -1,0 +1,116 @@
+<!-- propertie-form/propertie-form.component.html -->
+<h2 mat-dialog-title>{{ _field ? 'Modifier' : 'Créer' }} une propriété</h2>
+
+<mat-dialog-content>
+
+    <mat-card class="p-0">
+        <mat-card-content class="!pt-4">
+            <form [formGroup]="basicForm">
+                <div class="flex flex-wrap">
+                    <div class="w-full">
+                        @for (item of dynamicsComponents;track item._id) {
+                            <!---->
+                            @if (item.type == "1") {
+                                <div class="!pb-4">
+                                    <mat-form-field class="full-width">
+                                        <input
+                                            matInput
+                                            name={{item.controlName}}
+                                            [(ngModel)]="item.model" 
+                                            formControlName={{item.controlName}}
+                                            placeholder={{item.placeholder}}
+                                            value="">
+                                    </mat-form-field>
+                                    <small 
+                                    *ngIf="basicForm.controls[item.controlName].hasError('minlength') && basicForm.controls[item.controlName].touched" 
+                                    class="form-error-msg"> Title require at least {{basicForm.controls[item.controlName].errors.minlength.requiredLength}} characters </small>
+                                    <small 
+                                    *ngIf="basicForm.controls[item.controlName].hasError('maxlength') && basicForm.controls[item.controlName].touched" 
+                                    class="form-error-msg"> Title can not contain more than {{basicForm.controls[item.controlName].errors.maxlength.requiredLength}} characters </small>
+                                </div>
+                            }
+                            <!---->
+                            @if (item.type == "2") { 
+                                <div class="!pb-4">
+                                    <mat-form-field class="full-width">
+                                        <textarea
+                                        matInput 
+                                        [(ngModel)]="item.model" 
+                                        name={{item.controlName}} 
+                                        formControlName={{item.controlName}} 
+                                        placeholder={{item.placeholder}}
+                                        value="">
+                                    </textarea>
+                                    </mat-form-field>
+                                    <small 
+                                    *ngIf="basicForm.controls[item.controlName].hasError('required') && basicForm.controls[item.controlName].touched" 
+                                    class="form-error-msg"> Description is required </small>
+                                </div>
+                            }
+                            <!---->
+                            @if (item.type == "3") { 
+                                <div class="!pb-4">
+                                    <mat-form-field class="full-width">
+                                    <mat-label>Select an option</mat-label>
+                                    <mat-select [(value)]="item.model" [(ngModel)]="item.model" name={{item.controlName}} 
+                                        formControlName={{item.controlName}} >
+                                        <mat-option>None</mat-option>
+                                        @for (item of item.datasource; track item.code) {
+                                            <mat-option value="{{item.code}}">{{item.name}}</mat-option>
+                                        }
+                                    </mat-select>
+                                    
+                                    
+                                </mat-form-field>
+                                <small 
+                                *ngIf="basicForm.controls[item.controlName].hasError('required') && basicForm.controls[item.controlName].touched" 
+                                class="form-error-msg"> Description is required </small>
+                            </div>
+                            }
+                        }
+                        
+                        <mat-divider></mat-divider>    
+                    
+                        <div class="!pb-4">
+                            <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                            <mat-checkbox >Multilingue</mat-checkbox>
+                        </div>
+                        <div class="!pb-4">
+                            <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                            <mat-checkbox ></mat-checkbox>
+                        </div>
+                        <div class="!pb-4">
+                            <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                            <mat-checkbox >Fixed Header</mat-checkbox>
+                        </div>
+                    
+                        <div class="!pb-4">
+                            <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                            <mat-checkbox >Fixed Header</mat-checkbox>
+                        </div>
+                        <div class="!pb-4">
+                            <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                            <mat-checkbox >Fixed Header</mat-checkbox>
+                        </div>
+                        <div class="!pb-4">
+                            <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
+                            <mat-checkbox >Fixed Header</mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <button 
+                    mat-raised-button 
+                    color="primary" 
+                    [disabled]="basicForm.invalid" (click)="submit()">Submit</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Annuler</button>
+  <button mat-flat-button color="primary" (click)="submit()" [disabled]="basicForm.invalid">
+    Enregistrer
+  </button>
+</mat-dialog-actions>

@@ -5,12 +5,12 @@ import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { environment } from 'environments/environment';
 import { catchError, map, throwError } from 'rxjs';
 import { CheckboxCellRenderer, themeBalham } from 'ag-grid-community';
-import { ActionCellRendererComponent } from '../../../shared/components/_ekit/grid/action-cell-renderer.component';
-import { EditableTextCellTranslate } from '../../../shared/components/_ekit/grid/editable-text-cell-translate.component';
+import { ActionCellRendererComponent } from './components/grid/cells/action-cell-renderer.component';
+import { EditableTextCellTranslate } from './components/grid/cells/editable-text-cell-translate.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { CommonModule,Location } from '@angular/common';
-import { EditableRelationCell } from '../../../shared/components/_ekit/grid/editable-relation-cell.component copy';
+import { EditableRelationCell } from './components/grid/cells/editable-relation-cell.component copy';
 import { FormsModule } from '@angular/forms';
 import { ApisService } from 'app/shared/services/_ekit/apis.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,13 +18,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
-import { AddHeaderButtonComponent } from 'app/shared/components/_ekit/grid/add-header-button.component';
+import { AddHeaderButtonComponent } from 'app/views/_ekit/generics_tables/components/grid/headers/add-header-button.component';
 import { Field } from 'app/shared/models/_ekit/field.model';
 import { util_d$1 } from 'echarts/types/dist/shared';
 import { Entity } from 'app/shared/models/_ekit/entity.model';
 import { PropertieComponent } from '../propertie/propertie.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertieModule } from '../propertie/propertie.module';
+import { GenericComponent } from './components/forms/generic/generic.component';
 
 // Row Data Interface
 interface IRow {
@@ -244,10 +245,17 @@ export class TablesComponent {
     }
   }
   addColumn() {
-    /*const dialogRef = this.dialog.open(PropertieModule, {
-      width: '600px',
+
+    
+
+
+    const dialogRef = this.dialog.open(GenericComponent, {
+      width: '420px',
       maxWidth: '95vw',
-      data: { },            // données d’entrée
+      height: '100vh',             // toute la hauteur
+      position: { right: '0', top: '0' }, // collé à droite et en haut
+      panelClass: 'full-height-dialog',
+      data: { type:"prop",uid:-1 },            // données d’entrée
       disableClose: true,        // évite la fermeture accidentelle
       autoFocus: 'first-tabbable'
     });
@@ -256,8 +264,8 @@ export class TablesComponent {
       if (result?.saved) {
         // rafraîchir la liste, etc.
       }
-    });*/
-    this.router.navigate(["/ekit/field/-1"]);
+    });
+    //this.router.navigate(["/ekit/field/-1"]);
   }
 
 
