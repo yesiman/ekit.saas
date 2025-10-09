@@ -16,7 +16,7 @@
         <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="">
           <div>
             <mat-form-field class="w-full">
-              <mat-label>Email*</mat-label>
+              <mat-label>{{ "AUTH.INPUT_MAIL" | translate }}*</mat-label>
               <input matInput type="email" formControlName="email" placeholder="support@ui-lib.com">
               <mat-error *ngIf="signupForm.get('email')?.hasError('required')">Email is required</mat-error>
               <mat-error *ngIf="signupForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
@@ -25,7 +25,7 @@
 
           <div>
             <mat-form-field class="w-full">
-              <mat-label>Password*</mat-label>
+              <mat-label>{{ "AUTH.INPUT_PASS" | translate }}*</mat-label>
               <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
                 placeholder="••••••••••">
               <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
@@ -33,22 +33,21 @@
               </button>
               <mat-error *ngIf="signupForm.get('password')?.hasError('required')">Password is required</mat-error>
             </mat-form-field>
-            <p><a [routerLink]="'/sessions/forgot-password'" class="text-primary text-center full-width">Reset
-                password</a></p>
+            <p><a [routerLink]="'/sessions/forgot-password'" class="text-primary text-center full-width">{{ "AUTH.LINK_RESET_PASS" | translate }}</a></p>
           </div>
 
-          <mat-checkbox formControlName="remember" color="primary">Trust this device for 30 days</mat-checkbox>
+          <!--<mat-checkbox formControlName="remember" color="primary">Trust this device for 30 days</mat-checkbox>-->
 
           <button mat-flat-button color="primary" type="submit" class="w-full py-2 my-4" [disabled]="signupForm.invalid">
-            Sign In
+            {{ "AUTH.BT_SIGNUP" | translate }}
           </button>
 
           <div class="text-center">
-            <span class="text-secondary">Don't have an account? </span>
-            <a routerLink="/sessions/signup" class="text-blue-500 hover:text-blue-600">Sign up</a>
+            <span class="text-secondary">{{ "AUTH.LABEL_NO_ACCOUNT" | translate }} </span>
+            <a routerLink="/sessions/signup" class="text-blue-500 hover:text-blue-600">{{ "AUTH.LINK_SIGNUP" | translate }}</a>
           </div>
 
-          <egret-divider text="OR" class="my-10"></egret-divider>
+          <egret-divider text="{{ 'AUTH.LABEL_OR' | translate }}" class="my-10"></egret-divider>
 
           <div class="flex flex-col gap-4">
 

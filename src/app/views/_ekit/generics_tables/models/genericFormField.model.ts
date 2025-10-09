@@ -2,9 +2,7 @@ export class GenericFormField {
     _id?:string;
     type:string;
     body:any;
-    controlName?:string;
     placeholder:string;
-    model:string;
     required:boolean;
     minLength:number;
     maxLength:number;

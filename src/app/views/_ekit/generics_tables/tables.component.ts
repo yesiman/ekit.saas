@@ -26,6 +26,11 @@ import { PropertieComponent } from '../propertie/propertie.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertieModule } from '../propertie/propertie.module';
 import { GenericComponent } from './components/forms/generic/generic.component';
+import { Iobject } from 'app/shared/models/_ekit/iobject.model';
+import { GenericFormField } from './models/genericFormField.model';
+import datatypes from 'assets/ressources/datatypes.json'
+import { Table } from 'app/shared/models/_ekit/table.model';
+import { PrototypeColHeader } from './components/grid/headers/prototype_col_header.component';
 
 // Row Data Interface
 interface IRow {
@@ -61,7 +66,7 @@ export class TablesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  
+  datatypes;
 
   gridApi;
   loading = true;
@@ -70,7 +75,7 @@ export class TablesComponent {
     private apisServices:ApisService,private _location: Location,
     private dialog:MatDialog
   ) {
-   
+    this.datatypes = datatypes;
   }
 
   ngOnInit() {
@@ -244,10 +249,42 @@ export class TablesComponent {
       //this.loadPage(event.api.paginationGetCurrentPage());
     }
   }
-  addColumn() {
 
+
+  initializeColumnDialogRef(field:Iobject) {
+    let data = field;
+    let fields:any;
     
-
+    fields = [
+      new GenericFormField({
+        _id:"plib",
+        type:"1",
+        body:{},
+        placeholder:"Title (Min Length: 4, Max Length: 100)",
+        required:true,
+        minLength:-1,
+        maxLength:-1
+      }),
+      new GenericFormField({
+        _id:"pdesc",
+        type:"2",
+        body:{},
+        placeholder:"title2 (Min Length: 4, Max Length: 100)",
+        required:true,
+        minLength:-1,
+        maxLength:-1
+      }),
+      new GenericFormField({
+        _id:"ptype",
+        type:"3",
+        body:{},
+        placeholder:"title3 (Min Length: 4, Max Length: 100)",
+        required:true,
+        datasource:this.datatypes,
+        minLength:-1,
+        maxLength:-1
+      })];
+    
 
     const dialogRef = this.dialog.open(GenericComponent, {
       width: '420px',
@@ -255,20 +292,97 @@ export class TablesComponent {
       height: '100vh',             // toute la hauteur
       position: { right: '0', top: '0' }, // collé à droite et en haut
       panelClass: 'full-height-dialog',
-      data: { type:"prop",uid:-1 },            // données d’entrée
+      data: { type:"properties",uid:-1, value:data, fields:fields },            // données d’entrée
       disableClose: true,        // évite la fermeture accidentelle
       autoFocus: 'first-tabbable'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.saved) {
-        // rafraîchir la liste, etc.
+        this.loadDataGrid();
       }
     });
-    //this.router.navigate(["/ekit/field/-1"]);
   }
 
+  addColumn(fieldUID:string = null) {
+    let data:any;
+    if (fieldUID) {
+      this.apisServices.getTable(fieldUID,"fr").subscribe((data:any) => {
+        data = data.result;
+        //this.console.log(this._project);
+        this.initializeColumnDialogRef(data);
+      })
+    } else {
+      data = new Field();
+      data._id = "-1";
+      data._projprof.push(this.globalService.project._id+this.globalService.table._id)
+      this.initializeColumnDialogRef(data);
+    }
+    //this.router.navigate(["/ekit/field/-1"]);
+  }
+  
+  initializetableDialogRef(table:Iobject) {
+    let data = table;
+    let fields:any;
+    
+    fields = [
+      new GenericFormField({
+        _id:"plib",
+        type:"1",
+        body:{},
+        placeholder:"Title (Min Length: 4, Max Length: 100)",
+        required:true,
+        minLength:-1,
+        maxLength:-1
+      }),
+      new GenericFormField({
+        _id:"pdesc",
+        type:"2",
+        body:{},
+        placeholder:"title2 (Min Length: 4, Max Length: 100)",
+        required:true,
+        minLength:-1,
+        maxLength:-1
+      })
+    ];
+    
 
+    const dialogRef = this.dialog.open(GenericComponent, {
+      width: '420px',
+      maxWidth: '95vw',
+      height: '100vh',             // toute la hauteur
+      position: { right: '0', top: '0' }, // collé à droite et en haut
+      panelClass: 'full-height-dialog',
+      data: { type:"prototypes",uid:-1, value:data, fields:fields },            // données d’entrée
+      disableClose: true,        // évite la fermeture accidentelle
+      autoFocus: 'first-tabbable'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.saved) {
+        this.loadDataGrid();
+      }
+    });
+  }
+
+  addTable(tableUID:string = null) {
+    let data:any;
+    
+    
+    if (tableUID) {
+      this.apisServices.getTable(tableUID,"fr").subscribe((data:any) => {
+        data = data.result;
+        //this.console.log(this._project);
+        this.initializetableDialogRef(data);
+      })
+    } else {
+        data = new Table();
+        data._id = "-1";
+        data.projects.push(this.globalService.project._id);
+        this.initializetableDialogRef(data);
+    }
+
+  }
 
 
   addLine() {
@@ -309,9 +423,7 @@ export class TablesComponent {
     });
   }
 
-  // HERE WHEN GRID IS LOADED WHE CAN LOAD COLUMS
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
+  loadDataGrid() {
     // A mettre dans un service EKIT
     //
     if (this.globalService.table) {
@@ -325,6 +437,8 @@ export class TablesComponent {
                 type: this.getCellType(item.body.ptype),
                 cellRenderer:this.getCellRendererTemplate(item.body.ptype),
                 editable:true,
+                headerComponent: PrototypeColHeader,
+                headerComponentParams: { icon: 'info', tooltip: 'Détails statut' },
                 //Si c'est la colonne titre on la fige a gauche
                 pinned: (item.specifics && item.specifics[this.globalService.project._id+this.globalService.table._id].isTitleCol=='true'?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
@@ -375,6 +489,10 @@ export class TablesComponent {
               cellRenderer: ActionCellRendererComponent,
               width: 100,
               sortable: false,
+              cellRendererParams: () => ({
+                onEdit: this.edit.bind(this),
+                //onDelete: this.onDelete.bind(this),
+              }),
               filter: false,pinned: 'right'
             }
         ];
@@ -403,6 +521,10 @@ export class TablesComponent {
           cellEditor: EditableTextCellTranslate,
           },
         { field: "button", cellRenderer: ActionCellRendererComponent,width: 100,
+          cellRendererParams: () => ({
+            onEdit: this.edit.bind(this),
+            //onDelete: this.onDelete.bind(this),
+          }),
           sortable: false,
           filter: false,pinned: 'right'},
       ];
@@ -423,6 +545,17 @@ export class TablesComponent {
         });
       })
     }
-    
+  }
+
+  edit(row: any) {
+    console.log('edit depuis parent', row);
+    this.addTable(row);
+    // ... ta logique
+  }
+
+  // HERE WHEN GRID IS LOADED WHE CAN LOAD COLUMS
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.loadDataGrid();
   }
 }

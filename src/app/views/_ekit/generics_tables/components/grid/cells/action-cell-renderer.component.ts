@@ -38,7 +38,10 @@ import { GlobalService } from 'app/shared/services/_ekit/global.service';
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
   private router = inject(Router);
-  params!: ICellRendererParams;
+  params!: ICellRendererParams & {
+    onEdit?: (row: any) => void;
+    onDelete?: (row: any) => void;
+  };
 
   constructor(private globalService:GlobalService) {}
 
@@ -56,7 +59,8 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
   }
 
   onEdit() {
-    alert(`Éditer: ${this.params.data._id}`);
+    this.params?.onEdit?.(this.params.data._id);
+    //alert(`Éditer: ${this.params.data._id}`);
   }
 
   onDelete() {

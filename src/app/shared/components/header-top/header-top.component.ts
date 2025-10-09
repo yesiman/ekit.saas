@@ -32,13 +32,9 @@ export class HeaderTopComponent implements OnInit, OnDestroy {
   themes: any[] = [];
   activeTheme: any;
   public availableLangs = [{
-    name: 'EN',
-    code: 'en',
-    flag: 'us'
-  }, {
-    name: 'ES',
-    code: 'es',
-    flag: 'es'
+    name: 'FR',
+    code: 'fr',
+    flag: 'fr'
   }];
   currentLang = this.availableLangs[0];
 

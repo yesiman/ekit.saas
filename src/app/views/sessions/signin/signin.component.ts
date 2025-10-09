@@ -10,6 +10,7 @@ import { AppLoaderService } from '../../../shared/services/app-loader/app-loader
 import { egretAnimations } from 'app/shared/animations/egret-animations';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 
 declare global {
   interface Window {
@@ -45,12 +46,15 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private jwtAuth: JwtAuthService,
     private egretLoader: AppLoaderService,
-    private http:HttpClient
+    private http:HttpClient, private translate:TranslateService
   ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
+
+    this.translate.use("fr");
+
     this.signupForm = this.fb.group({
       email: ['support@ui-lib.com', [Validators.required, Validators.email]],
       password: ['12345678', Validators.required],
@@ -117,7 +121,9 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigateByUrl(this.jwtAuth.return);
     this.isLoading = false;
   }
-  //CUSTOM AUTH
+  /**
+   * CUSTOM AUTH ON SUBMIT BUTTON CLICK
+   */
   onSubmit() {
     if (this.signupForm.valid) {
       const signinData = this.signupForm.value;

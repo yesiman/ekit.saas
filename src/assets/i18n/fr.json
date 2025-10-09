@@ -1,5 +1,14 @@
 {
-  "AUTH.GOOGLE_BT":"Se eeconnecter avec Google",
+  "AUTH": {
+    "BT_SIGNUP":"Se connecter",
+    "BT_GOOGLE":"Se connecter avec Google",
+    "LABEL_NO_ACCOUNT":"Pas de compte?",
+    "LABEL_OR":"OU",
+    "LINK_RESET_PASS":"Réinitialiser le mot de passe",
+    "LINK_SIGNUP":"Créer",
+    "INPUT_MAIL":"Email",
+    "INPUT_PASS":"Mot de passe"
+  },
   "DASHBOARD": "Dashboard",
   "APPS": "Apps",
   "INBOX": "Inbox",

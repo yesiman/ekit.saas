@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 declare global {
@@ -13,7 +14,7 @@ declare global {
   selector: 'app-google-signin',
   templateUrl: './google-signin.component.html',
   styleUrls: ['./google-signin.component.scss'],
-  imports:[MatIcon,MatButton]
+  imports:[MatIcon,MatButton,TranslateModule]
 })
 export class GoogleSigninComponent {
   @Output() loginWithGoogle: EventEmitter<any> = new EventEmitter<any>();

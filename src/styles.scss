@@ -1,7 +1,7 @@
 /* AG Grid CSS de base */
 @import "~ag-grid-community/styles/ag-grid.css";
 @import "~ag-grid-community/styles/ag-theme-alpine.css";
-
+@use '@angular/material' as mat;
 /* ====== AG Grid Custom Headers ====== */
 .ag-theme-alpine {
   // Couleur de fond de la barre d'entête

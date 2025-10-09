@@ -1,32 +1,32 @@
 <!-- propertie-form/propertie-form.component.html -->
-<h2 mat-dialog-title>{{ _field ? 'Modifier' : 'Créer' }} une propriété</h2>
+<h2 mat-dialog-title>{{ _entity ? 'Modifier' : 'Créer' }} une propriété</h2>
 
 <mat-dialog-content>
 
     <mat-card class="p-0">
         <mat-card-content class="!pt-4">
-            <form [formGroup]="basicForm">
+            <form class="compact" [formGroup]="basicForm">
                 <div class="flex flex-wrap">
                     <div class="w-full">
-                        @for (item of dynamicsComponents;track item._id) {
+                        @for (item of fields;track item._id) {
                             <!---->
                             @if (item.type == "1") {
                                 <div class="!pb-4">
                                     <mat-form-field class="full-width">
                                         <input
                                             matInput
-                                            name={{item.controlName}}
-                                            [(ngModel)]="item.model" 
-                                            formControlName={{item.controlName}}
+                                            name={{item._id}}
+                                            [(ngModel)]="_entity.body[item._id]" 
+                                            formControlName={{item._id}}
                                             placeholder={{item.placeholder}}
                                             value="">
                                     </mat-form-field>
                                     <small 
-                                    *ngIf="basicForm.controls[item.controlName].hasError('minlength') && basicForm.controls[item.controlName].touched" 
-                                    class="form-error-msg"> Title require at least {{basicForm.controls[item.controlName].errors.minlength.requiredLength}} characters </small>
+                                    *ngIf="basicForm.controls[item._id].hasError('minlength') && basicForm.controls[item._id].touched" 
+                                    class="form-error-msg"> Title require at least {{basicForm.controls[item._id].errors.minlength.requiredLength}} characters </small>
                                     <small 
-                                    *ngIf="basicForm.controls[item.controlName].hasError('maxlength') && basicForm.controls[item.controlName].touched" 
-                                    class="form-error-msg"> Title can not contain more than {{basicForm.controls[item.controlName].errors.maxlength.requiredLength}} characters </small>
+                                    *ngIf="basicForm.controls[item._id].hasError('maxlength') && basicForm.controls[item._id].touched" 
+                                    class="form-error-msg"> Title can not contain more than {{basicForm.controls[item._id].errors.maxlength.requiredLength}} characters </small>
                                 </div>
                             }
                             <!---->
@@ -35,15 +35,15 @@
                                     <mat-form-field class="full-width">
                                         <textarea
                                         matInput 
-                                        [(ngModel)]="item.model" 
-                                        name={{item.controlName}} 
-                                        formControlName={{item.controlName}} 
+                                        [(ngModel)]="_entity.body[item._id]" 
+                                        name={{item._id}} 
+                                        formControlName={{item._id}} 
                                         placeholder={{item.placeholder}}
                                         value="">
                                     </textarea>
                                     </mat-form-field>
                                     <small 
-                                    *ngIf="basicForm.controls[item.controlName].hasError('required') && basicForm.controls[item.controlName].touched" 
+                                    *ngIf="basicForm.controls[item._id].hasError('required') && basicForm.controls[item._id].touched" 
                                     class="form-error-msg"> Description is required </small>
                                 </div>
                             }
@@ -51,21 +51,20 @@
                             @if (item.type == "3") { 
                                 <div class="!pb-4">
                                     <mat-form-field class="full-width">
-                                    <mat-label>Select an option</mat-label>
-                                    <mat-select [(value)]="item.model" [(ngModel)]="item.model" name={{item.controlName}} 
-                                        formControlName={{item.controlName}} >
-                                        <mat-option>None</mat-option>
-                                        @for (item of item.datasource; track item.code) {
-                                            <mat-option value="{{item.code}}">{{item.name}}</mat-option>
-                                        }
-                                    </mat-select>
-                                    
-                                    
-                                </mat-form-field>
-                                <small 
-                                *ngIf="basicForm.controls[item.controlName].hasError('required') && basicForm.controls[item.controlName].touched" 
-                                class="form-error-msg"> Description is required </small>
-                            </div>
+                                        <mat-label>Select an option</mat-label>
+                                        <mat-select [(value)]="_entity.body[item._id]" [(ngModel)]="_entity.body[item._id]" name={{item._id}} 
+                                            formControlName={{item._id}} >
+                                            <mat-option>None</mat-option>
+                                            @for (item of item.datasource; track item.code) {
+                                                <mat-option value="{{item.code}}">{{item.name}}</mat-option>
+                                            }
+                                        </mat-select>
+                                        
+                                        
+                                    </mat-form-field>
+                                    <small *ngIf="basicForm.controls[item._id].hasError('required') && basicForm.controls[item._id].touched" 
+                                        class="form-error-msg"> Description is required </small>
+                                </div>
                             }
                         }
                         

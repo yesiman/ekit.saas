@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Field } from 'app/shared/models/_ekit/field.model';
 import { Iobject } from 'app/shared/models/_ekit/iobject.model';
 import { GenericFormField } from '../../../models/genericFormField.model';
+import { ApisService } from 'app/shared/services/_ekit/apis.service';
 
 @Component({
   selector: 'app-generic',
@@ -49,78 +50,36 @@ export class GenericComponent {
   basicForm: UntypedFormGroup;
   datatypes;
   dynamicsComponents;
-  _field:Field;
+  _entity:Iobject;
+  _type:string;
+  fields:GenericFormField[];
+  //
   constructor(private dialogRef: MatDialogRef<GenericComponent, { saved: boolean; value?: Iobject }>,
-    @Inject(MAT_DIALOG_DATA) public data: { value?: Iobject, fields:any }
-  ) {
-    console.log(data);
+    @Inject(MAT_DIALOG_DATA) public data: { value?: Iobject, fields:any, type:string },
+    private apisService:ApisService) {
+    this._entity =data.value;
+    this.fields = data.fields;
     this.datatypes = datatypes;
+    this._type = data.type;
   }
   ngOnInit() { 
     //INIT PROJECT FORM
-    this._field = new Field();
-
-    this.dynamicsComponents = [
-      new GenericFormField({
-        _id:"plib",
-        type:"1",
-        body:{},
-        controlName:"title",
-        placeholder:"Title (Min Length: 4, Max Length: 100)",
-        model:this._field.body.plib,
-        required:true,
-        minLength:-1,
-        maxLength:-1
-      }),
-      new GenericFormField({
-        _id:"pli",
-        type:"2",
-        body:{},
-        controlName:"title2",
-        placeholder:"title2 (Min Length: 4, Max Length: 100)",
-        model:this._field.body.pli,
-        required:true,
-        minLength:-1,
-        maxLength:-1
-      }),
-      new GenericFormField({
-        _id:"pl",
-        type:"3",
-        body:{},
-        controlName:"title3",
-        placeholder:"title3 (Min Length: 4, Max Length: 100)",
-        model:this._field.body.pl,
-        required:true,
-        datasource:this.datatypes,
-        minLength:-1,
-        maxLength:-1
-      })];
-    //
     let formGroupControls = {};
-    this.dynamicsComponents.forEach(element => {
+    this.fields.forEach(element => {
+      
       let validatorsArray = [];
       if (element.required) { validatorsArray.push(Validators.required) };
       if (element.minLength) { validatorsArray.push(Validators.minLength(4)) };
       if (element.maxLength) { validatorsArray.push(Validators.maxLength(100)) };
-      formGroupControls[element.controlName] = new UntypedFormControl('', validatorsArray);
+      formGroupControls[element._id] = new UntypedFormControl('', validatorsArray);
     });
     this.basicForm = new UntypedFormGroup(formGroupControls);
-
-    /*this.basicForm = new UntypedFormGroup({
-      title: new UntypedFormControl('', [
-        Validators.minLength(4),
-        Validators.maxLength(100)
-      ]),
-      description: new UntypedFormControl('', [
-        Validators.required
-      ]),
-      ptype: new UntypedFormControl('', [
-        Validators.required
-      ])
-    })*/
   }
   submit() {
-    console.log(this._field);
+    console.log(this._type,this._entity);
+    this.apisService.save(this._entity,this._type,"fr").subscribe((data) => {
+      this.dialogRef.close({ saved: true });
+    });
   }
   cancel() {
     this.dialogRef.close({ saved: false });

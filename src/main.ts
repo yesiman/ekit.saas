@@ -21,7 +21,7 @@ import { AppConfirmService } from './app/shared/services/app-confirm/app-confirm
 import { tokenInterceptorFn } from 'app/shared/interceptors/token-interceptor.fn';
 
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { errorInterceptorFn } from 'app/shared/interceptors/erros-interceptor.fn';
+import { errorInterceptorFn } from 'app/shared/interceptors/errors-interceptor.fn';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
