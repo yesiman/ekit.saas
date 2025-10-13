@@ -1,10 +1,11 @@
 export class GenericFormField {
     _id?:string;
     type:string;
-    body:any;
     placeholder:string;
     required:boolean;
     minLength:number;
+    visibleClause:string;
+    model:any;
     maxLength:number;
     datasource:any;
     constructor(init?: Partial<GenericFormField>) {

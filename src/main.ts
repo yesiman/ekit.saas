@@ -32,8 +32,13 @@ if (environment.production) {
   enableProdMode();
 }
 
+import {
+  RenderApiModule,                // ← important
+  // … autres modules que tu utilises
+} from 'ag-grid-community';
+
 ModuleRegistry.registerModules([
-    AllCommunityModule, // or AllEnterpriseModule
+    AllCommunityModule,RenderApiModule, // or AllEnterpriseModule
 ]);
 
 bootstrapApplication(AppComponent, {

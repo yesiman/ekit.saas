@@ -7,8 +7,8 @@
                 <img src="assets/images/egret.svg" alt="" class="app-logo">
 
                 <span style="margin: auto" *ngIf="layoutConf.sidebarStyle !== 'compact'"></span>
-                <div class="sidebar-compact-switch" [ngClass]="{active: layoutConf.sidebarCompactToggle}"
-                    (click)="toggleCollapse()" *ngIf="layoutConf.sidebarStyle !== 'compact'"><span></span></div>
+                <div class="sidebar-compact-switch" [ngClass]="{active: layoutConf.darkMode}"
+                    (click)="toggleCollapse()"><span></span></div>
             </div>
             <!-- Sidebar user -->
             

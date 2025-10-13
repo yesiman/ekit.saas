@@ -32,9 +32,8 @@
 
         
     </mat-toolbar>
-    
     <ag-grid-angular *ngIf="!loading"
-        [theme]="agGridTheme"
+        [theme]="agGridTheme" 
         [rowData]="rowData"
         [columnDefs]="colDefs" 
         (gridReady)="onGridReady($event)" 

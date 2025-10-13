@@ -9,6 +9,9 @@
     "INPUT_MAIL":"Email",
     "INPUT_PASS":"Mot de passe"
   },
+  "SIDEBAR": {
+    "PROJECTS":"Mes projets" 
+  },
   "DASHBOARD": "Dashboard",
   "APPS": "Apps",
   "INBOX": "Inbox",

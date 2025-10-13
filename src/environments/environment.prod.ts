@@ -4,6 +4,6 @@ export const environment = {
   production: true,
   apiURL: config.apiUrl,
   googleConfig:{
-    apiKey:""
+    apiKey:"435857895043-69cc44aik669cm88r679but300il9apk.apps.googleusercontent.com"
   }
 };

@@ -36,7 +36,7 @@ import { IHeaderParams } from 'ag-grid-community';
   `]
 })
 export class AddHeaderButtonComponent implements IHeaderAngularComp {
-  params!: IHeaderParams & { onAddColumn?: () => void; title?: string };
+  params!: IHeaderParams & { onAddColumn?: (uid?:string) => void; title?: string };
 
   agInit(params: any): void {
     this.params = params;

@@ -15,6 +15,7 @@ export interface ILayoutConf {
   breadcrumb?: string; // simple, title
   topbarFixed?: boolean; // Fixed header
   matTheme?: string; // material theme. egret-navy, egret-navy-dark
+  darkMode?:Boolean;
 }
 export interface ILayoutChangeOptions {
   duration?: number;
@@ -44,6 +45,7 @@ export class LayoutService {
   setAppLayout() {
     // ********** SET DEFAULT LAYOUT **********
     let defaultLayout: ILayoutConf = {
+      darkMode:false,
       navigationPos: 'side', // side, top
       sidebarStyle: 'full', // full, compact, closed
       sidebarCompactToggle: false, // if "sidebarStyle" is "compact" make it true
@@ -69,7 +71,7 @@ export class LayoutService {
       } catch (e) {
         console.log('Error getting theme from local storage', e);
       }
-      themeId = themeId || lc.matTheme;
+      themeId = lc.matTheme;
       this.themeService.setActiveThemeById(themeId);
     // }
 
@@ -111,6 +113,7 @@ export class LayoutService {
     this.publishLayoutChange({
       isMobile: this.isMobile,
       sidebarStyle,
+      darkMode:true
     });
   }
   isSm() {

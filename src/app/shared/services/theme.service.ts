@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ThemeConfig, ThemeMode, generateThemeConfig, THEME_IDS } from '../config/theme-colors';
 import { config } from 'config';
-
+import { themeBalham,colorSchemeDarkBlue } from 'ag-grid-community';
 /**
  * Service responsible for managing application themes
  * Uses theme configurations from ../config/theme-colors.ts
@@ -19,10 +19,13 @@ export class ThemeService {
 
   // Initialize themes from the central configuration
   private themeConfig = generateThemeConfig();
-  
+  public agGridTheme = themeBalham;
   // Available themes can be expanded by the app
   private availableThemes: ThemeConfig[] = Object.values(this.themeConfig);
   
+  // 
+  private _darkMode:boolean;
+
   // Theme state
   private activeThemeSubject = new BehaviorSubject<ThemeConfig>(this.themeConfig[THEME_IDS.NAVY_LIGHT]);
   
@@ -81,6 +84,15 @@ export class ThemeService {
     return false;
   }
   
+  getGridTheme() {
+    if (this._darkMode) {
+      return themeBalham.withPart(colorSchemeDarkBlue);
+    }
+    else {
+      return themeBalham;
+    }
+  }
+
   /**
    * Set active theme and apply it
    */
@@ -159,9 +171,11 @@ export class ThemeService {
    * Set dark mode directly
    */
   setDarkMode(isDark: boolean): void {
+    this._darkMode = isDark;
     if (isDark) {
       this.renderer.addClass(this.documentElement, 'egret-navy-dark');  
       this.renderer.addClass(this.bodyElement, 'egret-navy-dark');
+      
     } else {
       this.renderer.removeClass(this.documentElement, 'egret-navy-dark');
       this.renderer.removeClass(this.bodyElement, 'egret-navy-dark');

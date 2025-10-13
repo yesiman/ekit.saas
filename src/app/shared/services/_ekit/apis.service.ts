@@ -26,8 +26,10 @@ export class ApisService {
   getTable = (uid:string,lang:string) => {
     return this.http.get(`${environment.apiURL}/prototypes/${lang}/`+uid)
   }
+  getField = (uid:string,lang:string) => {
+    return this.http.get(`${environment.apiURL}/properties/${lang}/`+uid)
+  }
   save = (obj:Iobject,repo:string,lang:string) => {
-    console.log(obj);
     if (obj._id == "-1") {
       return this.http.post(`${environment.apiURL}/${repo}/${lang}/`, obj)
     } 

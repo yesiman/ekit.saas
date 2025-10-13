@@ -8,7 +8,9 @@
   "DIALOGS": "Dialogs",
   "CONFIRM": "Confirm",
   "LOADER": "Loader",
-
+"SIDEBAR": {
+    "PROJECTS":"Mes projets" 
+  },
   "MATERIAL": "Material",
   "BUTTONS": "Buttons",
   "CARDS": "Cards",

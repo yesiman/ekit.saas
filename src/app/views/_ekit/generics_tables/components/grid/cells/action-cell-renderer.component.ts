@@ -12,9 +12,11 @@ import { GlobalService } from 'app/shared/services/_ekit/global.service';
   ],
   template: `
     <div class="action-buttons">
-      <mat-icon (click)="onEdit()" role="img" title="Editer un projet" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">edit</mat-icon>
-      <mat-icon (click)="onList()" role="img" title="Afficher les lignes" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">list</mat-icon>
-      <mat-icon (click)="onDelete()" role="img" title="Editer un projet" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">delete</mat-icon>
+      <mat-icon (click)="onEdit()"  color="primary" role="img" title="Editer un projet" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">edit</mat-icon>
+      @if (!globalService.table) {
+        <mat-icon (click)="onList()" color="accent" role="img" title="Afficher les lignes" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">list</mat-icon>
+      }
+      <mat-icon (click)="onDelete()" color="warn" role="img" title="Editer un projet" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">delete</mat-icon>
     </div>
   `,
   styles: [`
@@ -43,7 +45,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     onDelete?: (row: any) => void;
   };
 
-  constructor(private globalService:GlobalService) {}
+  constructor(public globalService:GlobalService) {}
 
   agInit(params: ICellRendererParams): void {
     this.params = params;

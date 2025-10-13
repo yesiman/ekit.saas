@@ -9,7 +9,7 @@ import { ThemeService } from "../../services/theme.service";
 import { map, catchError, delay } from "rxjs/operators";
 import { ILayoutConf, LayoutService } from "app/shared/services/layout.service";
 import { JwtAuthService } from "app/shared/services/auth/jwt-auth.service";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { SidenavComponent } from "../sidenav/sidenav.component";
 import { PerfectScrollbarModule } from "app/shared/components/perfect-scrollbar";
 import { HttpClient } from "@angular/common/http";
@@ -44,18 +44,17 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
     public themeService: ThemeService,
     private layout: LayoutService,
     public jwtAuth: JwtAuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private translate: TranslateService
   ) {}
 
-  ngOnInit() {
-    this.iconTypeMenuTitle = this.navService.iconTypeMenuTitle;
-    // EKIT 
-    // SI PAS DE PROJET SELECTIONNE
-    // ON VA LOADER LES PROJET DE L'UTILISATEUR POUR SELECTION
-    // A PASSER DANS LE SERVICE EKIT AVEC observable
+  libMyProjects:string;
+  loadProjects() {
+    
+
     this.http.post(`${environment.apiURL}/datas/fr`, { projectsUIDs:(this.jwtAuth.user as any).projects })
       .pipe(
-        map((res: any) => {
+        map((res: any) => {``
           return res.result.map(item => ({
                 name: item.name,
                 type: "project",
@@ -66,13 +65,14 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
 
         }),
         catchError((error) => {
+          console.log(error);
           return throwError(error);
         })
     ).subscribe((data) => {
       //Création de la liste des projets
       this.menuItems = [  
           {
-            name: "Projects",
+            name: this.libMyProjects,
             type: "separator",
             icon:"list",
             addMoreButton:true
@@ -88,7 +88,21 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
           ).length;
         });
     });
+  }
 
+  ngOnInit() {
+    this.iconTypeMenuTitle = this.navService.iconTypeMenuTitle;
+    // EKIT 
+    // SI PAS DE PROJET SELECTIONNE
+    // ON VA LOADER LES PROJET DE L'UTILISATEUR POUR SELECTION
+    // A PASSER DANS LE SERVICE EKIT AVEC observable
+    //this.translate.use("fr");
+    
+    this.translate.get('SIDEBAR.PROJECTS').subscribe((res: string) => {
+      this.libMyProjects = res;
+      this.loadProjects();
+    });
+    
 
 
     
@@ -118,16 +132,23 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   toggleCollapse() {
     if (
-      this.layoutConf.sidebarCompactToggle
+      this.layoutConf.darkMode
     ) {
         this.layout.publishLayoutChange({
-        sidebarCompactToggle: false
-      });
+          sidebarColor:"sidebar-light",
+          matTheme: "egret-navy",
+          darkMode: false
+        });
+        this.themeService.setDarkMode(false);
     } else {
         this.layout.publishLayoutChange({
+            
+            sidebarColor:"sidebar-dark",
+            matTheme: "egret-navy-dark",
             // sidebarStyle: "compact",
-            sidebarCompactToggle: true
-          });
+            darkMode: true
+        });
+        this.themeService.setDarkMode(true);
     }
   }
 }

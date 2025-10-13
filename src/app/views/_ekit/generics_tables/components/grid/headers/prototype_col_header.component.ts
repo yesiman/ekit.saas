@@ -1,34 +1,70 @@
-import { Component } from '@angular/core';
-import { IHeaderAngularComp } from 'ag-grid-angular';
-import { IHeaderParams } from 'ag-grid-community';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+
+import type { IInnerHeaderAngularComp } from 'ag-grid-angular';
+import type { IHeaderParams } from 'ag-grid-community';
+
+export interface ICustomInnerHeaderParams {
+    icon: string;
+}
 
 @Component({
-  selector: 'app-prototype-col-header',
-  template: `
-    <div class="my-hd" (click)="sort($event)">
-      <span class="ag-header-cell-text">{{ params.displayName }}</span>
-      <span class="ag-header-icon ag-header-icon-filter"
-            
-            (click)="openMenu($event)">
-        <span class="ag-icon ag-icon-filter"></span>
-      </span>
-      <button class="icon-btn" (click)="onIcon($event)" title="kml">
-        <span class="material-icons">add</span>
-      </button>
-      <span class="ag-header-icon ag-header-menu-button" (click)="openMenu($event)"></span>
-    </div>
-  `,
-  styles: [`
-    .my-hd { display:inline-flex; align-items:center; gap:6px; }
-    .icon-btn { border:0; background:transparent; padding:0; line-height:1; cursor:pointer; }
-    .material-icons { font-size:16px; }
-  `]
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+
+    template: `
+        <div class="customInnerHeader">
+            @if (icon()) {
+                <mat-icon matRipple (click)="onEdit($event)" role="img" title="Editer un projet" class="mat-icon notranslate material-icons mat-ligature-font" aria-hidden="true" data-mat-icon-type="font">{{ icon() }}</mat-icon>
+      
+            }
+            <span>{{ displayName() }}</span>
+        </div>
+    `,
+    styles: [
+        `
+            .customInnerHeader {
+                display: flex;
+                gap: 0.25rem;
+                align-items: center;
+                
+            }
+
+            mat-icon {
+              font-size:16px;
+              height:16px;
+            }
+
+            .customInnerHeader span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .fa {
+                color: cornflowerblue;
+            }
+        `,
+    ],
 })
-export class PrototypeColHeader implements IHeaderAngularComp {
-  params!: IHeaderParams;
-  agInit(p: IHeaderParams) { this.params = p; }
-  refresh(p: IHeaderParams) { this.params = p; return true; }
-  sort(e: MouseEvent) { if (this.params.enableSorting) this.params.progressSort(e.shiftKey); }
-  openMenu(e: MouseEvent) { e.stopPropagation(); this.params.showColumnMenu!(e.target as HTMLElement); }
-  onIcon(e: MouseEvent) { e.stopPropagation(); /* ta logique */ }
+export class PrototypeColHeader implements IInnerHeaderAngularComp {
+    params!: IHeaderParams & { onAddColumn?: (uid?:string) => void; uid?: string };
+    icon = signal('');
+    displayName = signal('');
+
+    agInit(params: IHeaderParams & ICustomInnerHeaderParams): void {
+        this.icon.set(params.icon);
+        this.displayName.set(params.displayName);
+        console.log(params);
+        this.params = params;
+    }
+
+    onEdit(e: Event) {
+        e.preventDefault();
+        e.stopPropagation();
+        //console.log
+        this.params?.onAddColumn?.(this.params.uid);
+    }
+
+    refresh(params: IHeaderParams): boolean {
+        return false;
+    }
 }
