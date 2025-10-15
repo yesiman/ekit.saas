@@ -10,7 +10,7 @@ import { EditableTextCellTranslate } from './components/grid/cells/editable-text
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { CommonModule,Location } from '@angular/common';
-import { EditableRelationCell } from './components/grid/cells/editable-relation-cell.component copy';
+import { EditableRelationCell } from './components/grid/cells/relation-cell-renderer.component';
 import { FormsModule } from '@angular/forms';
 import { ApisService } from 'app/shared/services/_ekit/apis.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +33,7 @@ import { PrototypeColHeader } from './components/grid/headers/prototype_col_head
 import { TableGenericService } from './services/forms/generic/table-generic.service';
 import { PropertyGenericService } from './services/forms/generic/propertie-generic.service';
 import { ThemeService } from 'app/shared/services/theme.service';
+import { CustomAutocompleteEditorComponent } from './components/grid/cells/custom-autocomplete-editor.component';
 
 // Row Data Interface
 interface IRow {
@@ -154,6 +155,8 @@ export class TablesComponent {
    * */ 
   getCellEditorTemplate(ptype:string) {
     switch (ptype) {
+      case "5912f8194c3181110079e0a5":
+        return CustomAutocompleteEditorComponent;
       //SELECT / ENUMS
       case "5912f82d4c3181110079e0a6":
         return 'agSelectCellEditor';
@@ -175,34 +178,51 @@ export class TablesComponent {
   getCellEditorTemplateParams(colItem:any,categoriesLines:any[]) {
     //ON TEST LE PTYPE DE L'ELEMENT
     switch (colItem.body.ptype) {
-      // LIEN INTERPROFIL
+      // ENUMERATION
       case "5912f82d4c3181110079e0a6":
-        const filteredCategoriesLines = categoriesLines.filter(item => (item.curProto == colItem.config.categid));
-        return (filteredCategoriesLines.map(item => {
+        const filteredCategoriesLines = categoriesLines.filter(item => (item.proto.find((itemProto:string) => itemProto == colItem.config.categid)));
+        const finalCategoriesLines = (filteredCategoriesLines.map(item => {
           return item._id;
-         }))
+        }))
+        return {values:finalCategoriesLines};
+      case "5912f8194c3181110079e0a5":
+        return {
+          fetchFn: (q: string, page: number) => this.fetchUsers(q, page), // retourne Promise<{items: any[], total: number}>
+          optionLabel: (o: any) => o.name,   // comment afficher
+          optionValue: (o: any) => o.id,     // ce qui est sauvegardé dans la cellule
+          minChars: 1,                       // déclenchement dès 1 caractère
+          pageSize: 30,                      // pagination côté serveur
+          debounceMs: 250,                   // anti-spam requêtes
+          placeholder: 'Rechercher un utilisateur…'
+        }
     }
     return null;
   }
+
+  // my.service.ts
+fetchUsers(q: string, page: number) {
+  const pageSize = 30;
+  return [];//fetch(`/api/users?query=${encodeURIComponent(q)}&page=${page}&pageSize=${pageSize}`)
+    //.then(r => r.json()); // { items: [{id,name}], total: 123 }
+}
   /** 
    * MANAGE CELL ENUMS IDS PARAMS RELATIONS WITH LABELS
    * */ 
-  getCellEditorTemplateValueFormater(params:any,colItem:any,categoriesLines:any[]) {
+  getCellEditorTemplateValueFormater(params:any,colItem:any,categoriesLines:any[],categoriesPrototypesTitles:any) {
     //ON TEST LE PTYPE DE L'ELEMENT
     switch (colItem.body.ptype) {
       // LIEN INTERPROFIL
       case "5912f82d4c3181110079e0a6":
-        const filteredCategoriesLines = categoriesLines.filter(item => (item.curProto == colItem.config.categid));
-        const withEmplyVal = filteredCategoriesLines
-        const obj = Object.fromEntries(filteredCategoriesLines.map(item => [item._id.toString(), item.body.p5b5ea8fd0311784a87b6dc0a]));
-        if (obj)
-        {
-          const map: Record<string, string> = {"":"",...obj};
-          return map[params.value] || params.value;
+        const filteredCategoriesLines = categoriesLines.filter(item => (item.proto.find((itemProto:string) => item._id == params.value)));
+        if (filteredCategoriesLines.length>0) {
+          return filteredCategoriesLines[0]["body"]["p"+categoriesPrototypesTitles[filteredCategoriesLines[0].proto[0]]];
         }
-        else {return null;}
+        else {
+          return "";
+        }
       case "5b33228daf1f20140098fbf8":
-        //return new Date(2020);
+        console.log("getCellEditorTemplateValueFormater");
+        return new Date();
     }
     return null;
   }
@@ -213,6 +233,7 @@ export class TablesComponent {
     switch (ptype) {
       // LIEN INTERPROFIL
       case "5912f8194c3181110079e0a5":
+        console.log("ssss");
         return EditableRelationCell;
       case "5912f8144c3181110079e0a4":
         return 'agCheckboxCellRenderer';
@@ -242,8 +263,9 @@ export class TablesComponent {
     switch (item.body.ptype) {
       case "5912f8144c3181110079e0a4":
         return (((p.data["p"+item.body.objectid] == true) || (p.data["p"+item.body.objectid] == "true")));
-      //case "5b33228daf1f20140098fbf8":
-        //return new Date();
+      case "5b33228daf1f20140098fbf8":
+        console.log("getCellEditorTemplateValueGetter");
+        return (p.data["p"+item.body.objectid]?new Date(p.data["p"+item.body.objectid]).toLocaleDateString():"");
       default:
         return p.data["p"+item.body.objectid];
     }
@@ -309,14 +331,14 @@ export class TablesComponent {
         data = data.result;
         //this.console.log(this._project);
         const fields = this.tablesGenericService.getColumns(data);
-        this.loadDialogRef("properties",data,fields);
+        this.loadDialogRef("prototypes",data,fields);
       })
     } else {
         data = new Table();
         data._id = "-1";
         data.projects.push(this.globalService.project._id);
         const fields = this.tablesGenericService.getColumns(data);
-        this.loadDialogRef("properties",data,fields);
+        this.loadDialogRef("prototypes",data,fields);
         
     }
 
@@ -383,18 +405,19 @@ export class TablesComponent {
                 pinned: (item.specifics &&  item.specifics[this.globalService.project._id+this.globalService.table._id].isTitleCol==true?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
                 //POUR TEST A INJECTER SI C'est un select
-                cellEditorParams:{
-                  values: this.getCellEditorTemplateParams(item,res.categoriesLines)
+                frameworkComponents: {
+                  customAutocompleteEditor: CustomAutocompleteEditorComponent
                 },
+                cellEditorParams:this.getCellEditorTemplateParams(item,res.categoriesLines),
                 valueGetter: p => this.getCellEditorTemplateValueGetter(p,item),
                 valueFormatter: (params: any) => {
-                  const obj = this.getCellEditorTemplateValueFormater(params,item,res.categoriesLines);
-                  if (obj)
+                  return this.getCellEditorTemplateValueFormater(params,item,res.categoriesLines,res.categoriesPrototypesTitles);
+                  /*if (obj)
                   {
                     const map: Record<string, string> = {"":"",...obj};
                     return map[params.value] || params.value;
                   }
-                  else {return null;}
+                  else {return null;}*/
                 }
             }));
           }),
@@ -493,7 +516,15 @@ export class TablesComponent {
 
   edit(row: any) {
     console.log('edit depuis parent', row);
-    this.addTable(row);
+    if (this.globalService.table) {
+      //this.addColumn(row);
+      // OBJECT EDITION POPUP MODE
+
+    }
+    else {
+      this.addTable(row);
+    }
+    
     // ... ta logique
   }
 

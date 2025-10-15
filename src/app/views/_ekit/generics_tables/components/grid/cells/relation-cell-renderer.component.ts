@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ICellRendererParams } from 'ag-grid-community';
 import { CommonModule } from '@angular/common';
 @Component({
-  selector: 'editable-relation-cell',
+  selector: 'app-relation-cell-renderer',
   imports: [
     FormsModule,
     CommonModule

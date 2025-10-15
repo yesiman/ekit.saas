@@ -73,7 +73,7 @@ export class GenericComponent {
     let formGroupControls = {};
     this.fields.forEach(element => {
       let validatorsArray = [];
-      if (element.required) { validatorsArray.push(Validators.required) };
+      if (element.required==true) { validatorsArray.push(Validators.required) };
       if (element.minLength) { validatorsArray.push(Validators.minLength(4)) };
       if (element.maxLength) { validatorsArray.push(Validators.maxLength(100)) };
       formGroupControls[element._id] = new UntypedFormControl('', validatorsArray);

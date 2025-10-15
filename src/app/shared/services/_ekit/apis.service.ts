@@ -31,6 +31,7 @@ export class ApisService {
   }
   save = (obj:Iobject,repo:string,lang:string) => {
     if (obj._id == "-1") {
+      console.log(repo);
       return this.http.post(`${environment.apiURL}/${repo}/${lang}/`, obj)
     } 
     else {

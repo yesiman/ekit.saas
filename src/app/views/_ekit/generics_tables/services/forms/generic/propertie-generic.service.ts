@@ -59,7 +59,7 @@ export class PropertyGenericService {
           _id:"categid",
           type:"3",
           model:field["config"],
-          visibleClause:'5912f8194c3181110079e0a5',
+          visibleClause:'5912f8194c3181110079e0a5,5912f82d4c3181110079e0a6',
           placeholder:"Type d'objet lié",
           required:false,
           datasource:tables.map(item => { 
