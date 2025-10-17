@@ -41,11 +41,6 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Material', breadcrumb: 'MATERIAL'}
       },
       {
-        path: 'dialogs',
-        loadChildren: () => import('./views/app-dialogs/app-dialogs.module').then(m => m.AppDialogsModule),
-        data: { title: 'Dialogs', breadcrumb: 'DIALOGS'}
-      },
-      {
         path: 'profile',
         loadChildren: () => import('./views/profile/profile.module').then(m => m.ProfileModule),
         data: { title: 'Profile', breadcrumb: 'PROFILE'}
@@ -54,11 +49,6 @@ export const rootRouterConfig: Routes = [
         path: 'others',
         loadChildren: () => import('./views/others/others.module').then(m => m.OthersModule),
         data: { title: 'Others', breadcrumb: 'OTHERS'}
-      },
-      {
-        path: 'tables',
-        loadChildren: () => import('./views/tables/tables.module').then(m => m.TablesModule),
-        data: { title: 'Tables', breadcrumb: 'TABLES'}
       },
       {
         path: 'tour',
@@ -91,58 +81,12 @@ export const rootRouterConfig: Routes = [
         data: { title: 'Map', breadcrumb: 'MAP'}
       },
       {
-        path: 'inbox',
-        loadChildren: () => import('./views/app-inbox/app-inbox.module').then(m => m.AppInboxModule),
-        data: { title: 'Inbox', breadcrumb: 'INBOX'}
-      },
-      {
-        path: 'calendar',
-        loadChildren: () => import('./views/app-calendar/app-calendar.module').then(m => m.AppCalendarModule),
-        data: { title: 'Calendar', breadcrumb: 'CALENDAR'}
-      },
-      {
-        path: 'chat',
-        loadChildren: () => import('./views/app-chats/app-chats.module').then(m => m.AppChatsModule),
-        data: { title: 'Chat', breadcrumb: 'CHAT'}
-      },
-      {
-        path: 'cruds',
-        loadChildren: () => import('./views/cruds/cruds.module').then(m => m.CrudsModule),
-        data: { title: 'CRUDs', breadcrumb: 'CRUDs'}
-      },
-      {
-        path: 'shop',
-        loadChildren: () => import('./views/shop/shop.module').then(m => m.ShopModule),
-        data: { title: 'Shop', breadcrumb: 'SHOP'}
-      },
-      {
         path: 'search',
         loadChildren: () => import('./views/search-view/search-view.module').then(m => m.SearchViewModule)
       },
       {
-        path: 'invoice',
-        loadChildren: () => import('./views/invoice/invoice.module').then(m => m.InvoiceModule)
-      },
-      {
-        path: 'todo',
-        loadChildren: () => import('./views/todo/todo.module').then(m => m.TodoModule)
-      },
-      {
-        path: 'orders',
-        loadChildren: () => import('./views/order/order.module').then(m => m.OrderModule),
-        data: { title: 'Orders', breadcrumb: 'Orders'}
-      },
-      {
-        path: 'page-layouts',
-        loadChildren: () => import('./views/page-layouts/page-layouts.module').then(m => m.PageLayoutsModule)
-      },
-      {
         path: 'session-pages',
         loadChildren: () => import('./views/sessions/sessions.module').then(m => m.SessionsModule),
-      },
-      {
-        path: 'utilities',
-        loadChildren: () => import('./views/utilities/utilities.module').then(m => m.UtilitiesModule)
       },
       {
         path: 'icons',

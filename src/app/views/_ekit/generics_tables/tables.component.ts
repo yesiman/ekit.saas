@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
-import type { ColDef, GridReadyEvent } from 'ag-grid-community';
+import type { CellClickedEvent, ColDef, GridReadyEvent } from 'ag-grid-community';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, filter, lastValueFrom, map, throwError } from 'rxjs';
 import { CheckboxCellRenderer, colorSchemeDark, colorSchemeDarkBlue, themeBalham } from 'ag-grid-community';
@@ -34,6 +34,9 @@ import { TableGenericService } from './services/forms/generic/table-generic.serv
 import { PropertyGenericService } from './services/forms/generic/propertie-generic.service';
 import { ThemeService } from 'app/shared/services/theme.service';
 import { CustomAutocompleteEditorComponent } from './components/grid/cells/custom-autocomplete-editor.component';
+import { RichtextEditorComponent } from './components/forms/editors/richtext-editor/richtext-editor.component';
+import { da } from 'date-fns/locale';
+import { MapEditorComponent } from './components/forms/editors/map-editor/map-editor.component';
 
 // Row Data Interface
 interface IRow {
@@ -83,17 +86,14 @@ export class TablesComponent {
   }
 
   ngOnInit() {
-    
     this.route.params.subscribe(routeParams => {
       this.loading = true;
       this.rowData = [];
       this.colDefs = [];
       this.globalService.table = null;
-
-      
-      this.agGridTheme = themeBalham;
-      
-
+      //
+      this.agGridTheme = this.themeService.getGridTheme();
+      //
       if (routeParams.tableuid) {
         this.apisServices.getTable(routeParams.tableuid,"fr").subscribe((data:any) => {
           this.globalService.table = data.result;
@@ -280,14 +280,14 @@ fetchUsers(q: string, page: number) {
 
   loadDialogRef(type:string,data:any,fields:any) {
         const dialogRef = this.dialog.open(GenericComponent, {
-        width: '420px',
-        maxWidth: '95vw',
-        height: '100vh',             // toute la hauteur
-        position: { right: '0', top: '0' }, // collé à droite et en haut
-        panelClass: 'full-height-dialog',
-        data: { type:type,uid:-1, value:data, fields:fields },            // données d’entrée
-        disableClose: true,        // évite la fermeture accidentelle
-        autoFocus: 'first-tabbable'
+          width: '420px',
+          maxWidth: '95vw',
+          height: '100vh',             // toute la hauteur
+          position: { right: '0', top: '0' }, // collé à droite et en haut
+          panelClass: 'full-height-dialog',
+          data: { type:type,uid:-1, value:data, fields:fields },            // données d’entrée
+          disableClose: true,        // évite la fermeture accidentelle
+          autoFocus: 'first-tabbable'
         });
     
         dialogRef.afterClosed().subscribe(result => {
@@ -359,6 +359,53 @@ fetchUsers(q: string, page: number) {
     });
   }
 
+
+  async onCellClicked(e:CellClickedEvent) {
+    console.log("onCellClicked",e);
+
+    const ptype = e.colDef?.headerComponentParams?.ptype;
+    const fielduid = e.colDef.field;
+    const objectuid = e.data._id;
+    console.log({ value:e.data[fielduid], objectuid:objectuid });
+    let popupComponent:any = null;
+    switch (ptype) {
+      case "5912f7204c3181110079e0a0":
+        // TEST ON PTYPE AND SHOW RELATED EDITION POPUP
+        popupComponent = RichtextEditorComponent;
+        break;
+      case "5912f7344c3181110079e0a3":
+        // TEST ON PTYPE AND SHOW RELATED EDITION POPUP
+        popupComponent = MapEditorComponent;
+        break;
+        
+    }
+    if (!popupComponent) { return; }
+    const dialogRef = this.dialog.open(popupComponent, {
+      width: '420px',
+      maxWidth: '95vw',
+      height: '100vh',             // toute la hauteur
+      position: { right: '0', top: '0' }, // collé à droite et en haut
+      panelClass: 'full-height-dialog',
+      data: { value:e.data[fielduid], objectuid:objectuid },            // données d’entrée
+      disableClose: true,        // évite la fermeture accidentelle
+      autoFocus: 'first-tabbable'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.saved) {
+        console.log(result.editorData);
+        e.data[fielduid] = result.value;
+          //this.loadDataGrid();
+          let o = {};
+          o[fielduid] = e.data[fielduid];
+          
+        e.data.objectid = this.saveObjectField((objectuid?objectuid:"-1"),e.data);
+      }
+    });
+
+    
+  }
+
   /**
    * 
    * @param params 
@@ -368,18 +415,21 @@ fetchUsers(q: string, page: number) {
     const row = e.data;
     const { colDef, field, data } = e;        // e.colDef / e.colDef.field
     const { oldValue, newValue } = e;
-    let updatedField = new Entity();
-    updatedField._id = (data.objectid?data.objectid:"-1");
-    updatedField.projects = [this.globalService.project._id];
-    updatedField.proto = [this.globalService.table._id];
-    delete data.id
-    updatedField.body = data;
-    //this._project.langs = this.rowData.filter(row => row.actif ).map(row => { return row.code } );
-    
-    //return;
-    this.apisServices.save(updatedField,"objects","fr").subscribe((resData:any) => {
-      data.objectid = resData.ok;
-    });
+    //
+    data.objectid = await this.saveObjectField((data.objectid?data.objectid:"-1"),data);
+    console.log("data.objectid",data.objectid);
+  }
+
+  async saveObjectField(id:string,body:any) {
+    let entity = new Entity();
+    entity._id = id;
+    entity.projects = [this.globalService.project._id];
+    entity.proto = [this.globalService.table._id];
+    delete body.id
+    entity.body = body;
+    console.log("entity",entity);
+    const saveResult:any = await lastValueFrom(this.apisServices.save(entity,"objects","fr"));
+    return saveResult.ok;
   }
 
   loadDataGrid() {
@@ -397,12 +447,15 @@ fetchUsers(q: string, page: number) {
                 cellRenderer:this.getCellRendererTemplate(item.body.ptype),
                 editable:true,
                 filter:true,
-                headerComponentParams: { innerHeaderComponent: PrototypeColHeader,
+                headerComponentParams: { 
+                  innerHeaderComponent: PrototypeColHeader,
                   onAddColumn: (uid?:string) => this.addColumn(uid), 
                   uid:item._id,
-                  icon: 'settings', tooltip: 'Détails statut' },
+                  icon: 'settings', tooltip: 'Détails statut',
+                  ptype:(item.body.ptype?item.body.ptype:null)
+                },
                 //Si c'est la colonne titre on la fige a gauche
-                pinned: (item.specifics &&  item.specifics[this.globalService.project._id+this.globalService.table._id].isTitleCol==true?"left":'none'),
+                  pinned: (item.specifics &&  item.specifics[this.globalService.project._id+this.globalService.table._id].isTitleCol==true?"left":'none'),
                 cellEditor: this.getCellEditorTemplate(item.body.ptype),
                 //POUR TEST A INJECTER SI C'est un select
                 frameworkComponents: {

@@ -2,7 +2,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi, withJsonpSupport } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -45,7 +45,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(rootRouterConfig),
     provideAnimations(),
-    provideHttpClient(withInterceptors([tokenInterceptorFn,errorInterceptorFn])),
+    provideHttpClient(withJsonpSupport(), withInterceptors([tokenInterceptorFn,errorInterceptorFn])),
     RoutePartsService,
     ThemeService,
     

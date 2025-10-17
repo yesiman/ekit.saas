@@ -19,6 +19,7 @@ import { rootRouterConfig } from './app.routing';
 import { SharedModule } from './shared/shared.module';
 import { AppComponent } from './app.component';
 
+
 import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';

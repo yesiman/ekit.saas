@@ -29,6 +29,9 @@ export class ApisService {
   getField = (uid:string,lang:string) => {
     return this.http.get(`${environment.apiURL}/properties/${lang}/`+uid)
   }
+  loadGmapLibrary() {
+    return this.http.jsonp('https://maps.googleapis.com/maps/api/js?key=AIzaSyBNcjxo_35qnEG17dQvvftWa68eZWepYE0', 'callback');
+  }
   save = (obj:Iobject,repo:string,lang:string) => {
     if (obj._id == "-1") {
       console.log(repo);

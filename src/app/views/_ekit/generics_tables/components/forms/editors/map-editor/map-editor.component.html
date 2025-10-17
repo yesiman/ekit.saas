@@ -1,0 +1,25 @@
+<!-- propertie-form/propertie-form.component.html -->
+<h2 mat-dialog-title>Rich TExt maj</h2>
+
+<mat-dialog-content>
+
+    <div class="flex flex-wrap">
+                    <div class="w-full">
+        @if (apiLoaded | async){
+          <div class="">
+            <google-map></google-map>
+          </div>
+        }
+      </div>
+
+    </div>
+            
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Annuler</button>
+  <!--[disabled]="basicForm.invalid"-->
+  <button mat-flat-button color="primary" (click)="submit()" >
+    Enregistrer
+  </button>
+</mat-dialog-actions>

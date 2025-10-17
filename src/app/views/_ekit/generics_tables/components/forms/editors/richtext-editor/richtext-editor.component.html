@@ -1,0 +1,33 @@
+<!-- propertie-form/propertie-form.component.html -->
+<h2 mat-dialog-title>Rich TExt maj</h2>
+
+<mat-dialog-content>
+
+    
+            <form class="compact" [formGroup]="basicForm">
+                <div class="flex flex-wrap">
+                    <div class="w-full">
+                       
+
+                        <quill-editor theme="snow" [(ngModel)]="editorData" formControlName="content">
+                        </quill-editor>
+                        <!--[(ngModel)]="editorData" 
+                            (onContentChanged)="onContentChanged()" 
+                            onSelectionChanged="onSelectionChanged()"-->
+                        
+                        
+                        <mat-divider></mat-divider>   
+                        
+                    </div>
+                </div>
+                
+            </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Annuler</button>
+  <!--[disabled]="basicForm.invalid"-->
+  <button mat-flat-button color="primary" (click)="submit()" >
+    Enregistrer
+  </button>
+</mat-dialog-actions>

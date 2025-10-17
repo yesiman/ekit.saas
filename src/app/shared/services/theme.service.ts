@@ -24,7 +24,7 @@ export class ThemeService {
   private availableThemes: ThemeConfig[] = Object.values(this.themeConfig);
   
   // 
-  private _darkMode:boolean;
+  public _darkMode:boolean;
 
   // Theme state
   private activeThemeSubject = new BehaviorSubject<ThemeConfig>(this.themeConfig[THEME_IDS.NAVY_LIGHT]);
