@@ -4,6 +4,8 @@ export class Field implements Iobject {
   _id?:string;
   body:any;
   versions?:string[];
+  multiling:boolean;
+  specifics:any;
   _projprof?:string[];
   constructor() {
     this.versions = ["fr"];
@@ -13,5 +15,4 @@ export class Field implements Iobject {
       pdesc:""
     }
   }
-  
 }

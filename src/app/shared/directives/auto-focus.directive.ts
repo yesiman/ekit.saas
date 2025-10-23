@@ -9,7 +9,6 @@ export class AutoFocusDirective {
     }
     
     public focus(): void {
-        console.log(this.el.nativeElement.focus());
         (this.el.nativeElement as HTMLInputElement).focus();
     }
 }

@@ -96,14 +96,21 @@ export class PropertyGenericService {
           model:field,
           type:"5912f8144c3181110079e0a4",
           placeholder:"Multilingue",
-          required:true
+          required:false
         }),
         new GenericFormField({
           _id:"isTitleCol",
           model:field["specifics"][this.globalService.project._id+this.globalService.table._id],
           type:"5912f8144c3181110079e0a4",
           placeholder:"Titre",
-          required:true
+          required:false
+        }),
+        new GenericFormField({
+          _id:"required",
+          model:field["specifics"][this.globalService.project._id+this.globalService.table._id],
+          type:"5912f8144c3181110079e0a4",
+          placeholder:"Obligatoire",
+          required:false
         })];
 
     }

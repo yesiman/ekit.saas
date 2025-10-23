@@ -75,7 +75,7 @@
                         @if (item.type == "5912f8144c3181110079e0a4") { 
                             <div class="!pb-4">
                             <!--[(ngModel)]="isTopbarFixed" (change)="toggleTopbarFixed($event)" [disabled]="selectedLayout === 'top'" [value]="selectedLayout !== 'top'"-->
-                                <mat-checkbox   [(ngModel)]="item.model[item._id]" 
+                                <mat-checkbox  [checked]="item.model[item._id]" [(ngModel)]="item.model[item._id]" 
                                         name={{item._id}} formControlName={{item._id}} >{{item.placeholder}}</mat-checkbox>
                             </div>
                         }

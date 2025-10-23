@@ -73,6 +73,7 @@ export class TablesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   gs = inject(GlobalService);
+  ts = inject(ThemeService);
 
   datatypes;
   agGridTheme:any;
@@ -122,9 +123,13 @@ export class TablesComponent {
 
   
  logLangChange = effect(() => {
-      const current = this.gs.appLang();   // <- lecture du signal
+      const currentLangSignal = this.gs.appLang();   // <- lecture du signal
       this.loadPage();
-      // ... placer ici tout traitement (side effects) déclenché par le changement
+  });
+  logThemeChange = effect(() => {
+      const currentGridTheme = this.ts.darkMode();   // <- lecture du signal
+      //this.loadPage();
+      this.agGridTheme = this.themeService.getGridTheme();
   });
 
   rowData: IRow[] = [];
@@ -143,7 +148,7 @@ export class TablesComponent {
    * */ 
   loadPage() {
     
-    this.http.post(`${environment.apiURL}/datas/`+this.globalService.appLang(), { projectUID:this.globalService.project._id, tableUID:this.globalService.table._id, coordinates:"Y" })
+    this.http.post(`${environment.apiURL}/datas/`+this.globalService.appLang(), { projectUID:this.globalService.project._id, tableUID:this.globalService?.table?._id, coordinates:"Y" })
       .pipe(
         map((res: any) => {
           //this.gridApi.setRowCount();
@@ -250,7 +255,6 @@ fetchUsers(q: string, page: number) {
     switch (ptype) {
       // LIEN INTERPROFIL
       case "5912f8194c3181110079e0a5":
-        console.log("ssss");
         return EditableRelationCell;
       case "5912f8144c3181110079e0a4":
         return 'agCheckboxCellRenderer';
@@ -283,7 +287,6 @@ fetchUsers(q: string, page: number) {
         return (((p.data["p"+item.body.objectid] == true) || (p.data["p"+item.body.objectid] == "true")));
       case "5a782af376657811002d0416":
       case "5b33228daf1f20140098fbf8":
-        console.log("getCellEditorTemplateValueGetter");
         return (p.data["p"+item.body.objectid]?new Date(p.data["p"+item.body.objectid]).toLocaleDateString():"");
       default:
         return p.data["p"+item.body.objectid];
@@ -322,9 +325,8 @@ fetchUsers(q: string, page: number) {
     let tables:any = await lastValueFrom(this.apisServices.getProjectTables(this.globalService.appLang()));
     if (fieldUID) {
       data = await lastValueFrom(this.apisServices.getField(fieldUID,this.globalService.appLang()));
-      //console.log('data',data);
+
       const fields:any = this.propertyGenericService.getColumns(data.result,tables.result);
-      console.log('fields',fields);
       this.loadDialogRef("properties",data.result,fields);
       //})
     } else {
@@ -368,17 +370,13 @@ fetchUsers(q: string, page: number) {
     
 
     if (entityUID) {
-      console.log("entityUID",entityUID);
       this.apisServices.getEntity(entityUID,this.globalService.appLang()).subscribe((data:any) => {
-        console.log("data",data);
         data = data.result as Entity;
         
-        //this.console.log(this._project);
         const fields = this.entityGenericService.getColumns(data,this.colDefs);
         this.loadDialogRef("objects",data,fields);
       })
     } else {
-        console.log("entityUID",entityUID);
         data = new Entity();
         data._id = "-1";
         //data.projects.push(this.globalService.project._id);
@@ -409,12 +407,10 @@ fetchUsers(q: string, page: number) {
    * @returns 
    */
   async onCellClicked(e:CellClickedEvent) {
-    console.log("onCellClicked",e);
-
+  
     const ptype = e.colDef?.headerComponentParams?.ptype;
     const fielduid = e.colDef.field;
     const objectuid = e.data._id;
-    console.log({ value:e.data[fielduid], objectuid:objectuid });
     let popupComponent:any = null;
     // TEST ON PTYPE AND SHOW RELATED EDITION POPUP
     switch (ptype) {
@@ -468,7 +464,6 @@ fetchUsers(q: string, page: number) {
     entity.proto = [this.globalService.table._id];
     delete body.id
     entity.body = body;
-    console.log("entity",entity);
     const saveResult:any = await lastValueFrom(this.apisServices.save(entity,"objects",this.globalService.appLang()));
     return saveResult.ok;
   }
@@ -493,9 +488,9 @@ fetchUsers(q: string, page: number) {
                 headerComponentParams: { 
                   innerHeaderComponent: PrototypeColHeader,
                   onAddColumn: (uid?:string) => this.addColumn(uid), 
-                  uid:item._id,
                   icon: 'settings', tooltip: 'Détails statut',
-                  ptype:(item.body.ptype?item.body.ptype:null)
+                  ptype:(item.body.ptype?item.body.ptype:null),
+                  field:item
                 },
                 //Si c'est la colonne titre on la fige a gauche
                   pinned: (item.specifics &&  item.specifics[this.globalService.project._id+this.globalService.table._id].isTitleCol==true?"left":'none'),

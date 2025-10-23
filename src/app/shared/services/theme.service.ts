@@ -1,4 +1,4 @@
-import { Injectable, Inject, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, Inject, Renderer2, RendererFactory2, signal, WritableSignal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ThemeConfig, ThemeMode, generateThemeConfig, THEME_IDS } from '../config/theme-colors';
@@ -24,8 +24,13 @@ export class ThemeService {
   private availableThemes: ThemeConfig[] = Object.values(this.themeConfig);
   
   // 
-  public _darkMode:boolean;
-
+  private _darkMode = signal(false);
+  get darkMode():WritableSignal<boolean> {
+    return this._darkMode;
+  }
+  set darkMode(value: boolean) {
+    this._darkMode.set(value);
+  }
   // Theme state
   private activeThemeSubject = new BehaviorSubject<ThemeConfig>(this.themeConfig[THEME_IDS.NAVY_LIGHT]);
   
@@ -84,8 +89,9 @@ export class ThemeService {
     return false;
   }
   
+  
   getGridTheme() {
-    if (this._darkMode) {
+    if (this._darkMode()) {
       return themeBalham.withPart(colorSchemeDarkBlue);
     }
     else {
@@ -171,7 +177,7 @@ export class ThemeService {
    * Set dark mode directly
    */
   setDarkMode(isDark: boolean): void {
-    this._darkMode = isDark;
+    this._darkMode.set(isDark);
     if (isDark) {
       this.renderer.addClass(this.documentElement, 'egret-navy-dark');  
       this.renderer.addClass(this.bodyElement, 'egret-navy-dark');

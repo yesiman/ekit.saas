@@ -25,10 +25,35 @@ export class ProjectComponent implements OnInit {
   colDefs: ColDef[] = [
       { field: "actif", type:"boolean",filter: "agTextColumnFilter",
         sortable: true,editable:true,
+        width: 60,
+        sort: 'desc',
         pinned: 'left'},
+      {
+        headerName: 'Défaut',
+        field: 'defaultLang',
+        width: 60,
+        pinned: 'left',
+        cellRenderer: (params) => {
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'defaultRow'; // même nom pour tous les inputs => exclusif
+          input.checked = !!params.value;
+
+          // Quand on clique : mettre à jour toutes les lignes
+          input.addEventListener('change', () => {
+            const api = params.api;
+
+            api.forEachNode((node) => {
+              node.setDataValue('defaultLang', node.id === params.node.id);
+            });
+          });
+
+          return input;
+        },
+      },
       { field: "code",filter: "agTextColumnFilter" },
       { field: "name",filter: "agTextColumnFilter" },
-      { field: "Drapeau" }
+      { field: "Drapeau" },
   ];
   rowData=[];
   agGridTheme = themeBalham.withParams({fontFamily: 'Poppins',});
@@ -45,11 +70,16 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  isLangDef(langCode:string):boolean {
+    return (this._project.defaultLang == langCode);
+  }
+
   initializeDataComp() {
     //INIT LANGUAGE TABLE
     this.rowData = langs.map(lang => {
       return {
         actif:this.isLangSelected(lang.code),
+        defaultLang:this.isLangDef(lang.code),
         ...lang
       }
     });
@@ -75,12 +105,10 @@ export class ProjectComponent implements OnInit {
       if (routeParams.projectuid == "-1") {
         this._project = new Project();
         this._project._id = "-1";
-        this.console.log(this._project);
         this.initializeDataComp();
       } else {
         this.apisService.getProject(routeParams.projectuid,this.globalService.appLang()).subscribe((data:any) => {
           this._project = data.result;
-          //this.console.log(this._project);
           this.initializeDataComp();
         })
       }
@@ -94,6 +122,8 @@ export class ProjectComponent implements OnInit {
   valid() {
     // FILTER ON CHECKED AND GET LANG CODES
     this._project.langs = this.rowData.filter(row => row.actif ).map(row => { return row.code } );
+    const lang = this.rowData.find(row => (row.defaultLang == true));
+    this._project.defaultLang = lang.code;
     this.apisService.save(this._project,"projects",this.globalService.appLang()).subscribe((data) => {
       this.console.log("data",data);
     });
