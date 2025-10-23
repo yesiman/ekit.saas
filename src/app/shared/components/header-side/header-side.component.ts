@@ -8,6 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { JwtAuthService } from '../../services/auth/jwt-auth.service';
 import { SearchModule } from '../../search/search.module';
+import { GlobalService } from 'app/shared/services/_ekit/global.service';
+import { LocalStoreService } from 'app/shared/services/local-store.service';
 
 @Component({
     selector: 'app-header-side',
@@ -27,6 +29,10 @@ export class HeaderSideComponent implements OnInit {
     name: 'FR',
     code: 'fr',
     flag: 'fr'
+  },{
+    name: 'EN',
+    code: 'en',
+    flag: 'gb'
   }];
   currentLang = this.availableLangs[0];
 
@@ -38,17 +44,33 @@ export class HeaderSideComponent implements OnInit {
     private layout: LayoutService,
     public translate: TranslateService,
     private renderer: Renderer2,
-    public jwtAuth: JwtAuthService
+    private ls:LocalStoreService,
+    public jwtAuth: JwtAuthService,
+    private globalService:GlobalService,
   ) {}
   ngOnInit() {
     this.themes = this.themeService.getAvailableThemes();
     this.activeTheme = this.themeService.getActiveTheme();
     this.layoutConf = this.layout.layoutConf;
-    this.translate.use(this.currentLang.code);
+
+    // UPDATE APP LANGUAGE CODE
+    
+    //this.translate.use(lng.code);
+    //this.globalService.appLang = lng.code;
+    const lang = this.ls.getItem("appLang");
+    if (!lang) {
+      this.currentLang = this.availableLangs[0];
+    } else {
+      this.currentLang = this.availableLangs.find(item => (item.code == lang));
+    }
+    this.globalService.appLang = this.currentLang.code;
+    this.translate.use(lang?lang:this.currentLang.code);
   }
   setLang(lng) {
     this.currentLang = lng;
     this.translate.use(lng.code);
+    this.globalService.appLang = lng.code;
+    this.ls.setItem("appLang", lng.code);
   }
   changeTheme(themeId: string) {
     this.themeService.setActiveThemeById(themeId);

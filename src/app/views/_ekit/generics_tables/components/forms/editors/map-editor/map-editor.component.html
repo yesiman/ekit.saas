@@ -2,17 +2,49 @@
 <h2 mat-dialog-title>Rich TExt maj</h2>
 
 <mat-dialog-content>
-
+  <form class="compact">
     <div class="flex flex-wrap">
-                    <div class="w-full">
+      <div class="w-full">
+        <div class="!pb-4">
+            <mat-form-field class="full-width">
+                <input
+                    matInput
+                    name="address" 
+                    placeholder="addresse" 
+                    value="">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input
+                    matInput
+                    name="lat" 
+                    type="number" 
+                    [(ngModel)]="lat" 
+                    placeholder="Latitude" 
+                    value="">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input
+                    matInput
+                    name="lng" 
+                    type="number" 
+                    [(ngModel)]="lng" 
+                    placeholder="Longitude" 
+                    value="">
+            </mat-form-field>
+        </div>
         @if (apiLoaded | async){
           <div class="">
-            <google-map></google-map>
+            <google-map [center]="center" [zoom]="zoom">
+              @for (position of markerPositions; track position) {
+                <map-marker [position]="position" [options]="markerOptions" (mapDrag)="onDrag(marker, $event)"/>
+              }
+            </google-map>
           </div>
         }
-      </div>
 
+      </div>
     </div>
+  </form>
             
 </mat-dialog-content>
 

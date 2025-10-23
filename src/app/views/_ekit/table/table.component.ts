@@ -60,7 +60,7 @@ export class TableComponent {
 
   valid() {
     //return;
-    this.apisService.save(this._table,"prototypes","fr").subscribe((data) => {
+    this.apisService.save(this._table,"prototypes",this.globalService.appLang()).subscribe((data) => {
       this.console.log("data",data);
     });
   }

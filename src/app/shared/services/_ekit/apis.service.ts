@@ -26,11 +26,14 @@ export class ApisService {
   getTable = (uid:string,lang:string) => {
     return this.http.get(`${environment.apiURL}/prototypes/${lang}/`+uid)
   }
+  getEntity = (uid:string,lang:string) => {
+    return this.http.get(`${environment.apiURL}/objects/${lang}/`+uid)
+  }
   getField = (uid:string,lang:string) => {
     return this.http.get(`${environment.apiURL}/properties/${lang}/`+uid)
   }
   loadGmapLibrary() {
-    return this.http.jsonp('https://maps.googleapis.com/maps/api/js?key=AIzaSyBNcjxo_35qnEG17dQvvftWa68eZWepYE0', 'callback');
+    return this.http.jsonp('https://maps.googleapis.com/maps/api/js?key='+environment.googleConfig.mapKey, 'callback');
   }
   save = (obj:Iobject,repo:string,lang:string) => {
     if (obj._id == "-1") {
@@ -40,6 +43,16 @@ export class ApisService {
     else {
       return this.http.put(`${environment.apiURL}/${repo}/${lang}/`+obj._id, obj)
     }
+  }
+  delete = (uid:string,repo:string,lang:string) => {
+    try 
+    {
+      return this.http.delete(`${environment.apiURL}/${repo}/${lang}/`+uid)
+    }
+    catch(err) {
+      console.log("err",err);
+    }
+    
   }
 
 }

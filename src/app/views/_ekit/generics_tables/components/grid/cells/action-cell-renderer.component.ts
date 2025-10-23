@@ -3,7 +3,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
+import { ApisService } from 'app/shared/services/_ekit/apis.service';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
+import { AppConfirmService } from 'app/shared/services/app-confirm/app-confirm.service';
 
 @Component({
   selector: 'app-action-cell-renderer',
@@ -45,7 +47,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     onDelete?: (row: any) => void;
   };
 
-  constructor(public globalService:GlobalService) {}
+  constructor(public globalService:GlobalService,private confirmService:AppConfirmService) {}
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
@@ -61,11 +63,27 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
   }
 
   onEdit() {
-    this.params?.onEdit?.(this.params.data._id);
-    //alert(`Éditer: ${this.params.data._id}`);
+    if (this.globalService.table) {
+      this.params?.onEdit?.(this.params.data.objectid);
+    }
+    else {
+      this.params?.onEdit?.(this.params.data._id);
+    }
+    
   }
 
   onDelete() {
-    alert(`Supprimer: ${this.params.data._id}`);
+    this.confirmService.confirm({title: "Validation", message: "Désafecter l'objet ?", confirmText: "Valider"})
+      .subscribe((result) => {
+        if (result) {
+          if (this.globalService.table) {
+            this.params?.onDelete?.(this.params.data.objectid);
+          }
+          else {
+            this.params?.onDelete?.(this.params.data._id);
+          }
+        }
+      });
+    
   }
 }

@@ -81,7 +81,7 @@ export class PropertieComponent {
     }
 
   valid() {
-    this.apisService.save(this._field,"properties","fr").subscribe((data) => {
+    this.apisService.save(this._field,"properties",this.globalService.appLang()).subscribe((data) => {
       this.console.log("data",data);
     });
   }

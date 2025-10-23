@@ -15,6 +15,7 @@ import { PerfectScrollbarModule } from "app/shared/components/perfect-scrollbar"
 import { HttpClient } from "@angular/common/http";
 import { environment } from "environments/environment";
 import { Subscription, throwError } from "rxjs";
+import { LocalStoreService } from "app/shared/services/local-store.service";
 
 @Component({
     selector: "app-sidebar-side",
@@ -45,7 +46,7 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
     private layout: LayoutService,
     public jwtAuth: JwtAuthService,
     private http: HttpClient,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   libMyProjects:string;
@@ -91,6 +92,8 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    
+
     this.iconTypeMenuTitle = this.navService.iconTypeMenuTitle;
     // EKIT 
     // SI PAS DE PROJET SELECTIONNE

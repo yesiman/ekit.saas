@@ -29,7 +29,7 @@ export class PropertyGenericService {
       return [
         new GenericFormField({
           _id:"plib",
-          type:"1",
+          type:"5912f7034c3181110079e09e",
           model:field.body,
           placeholder:"Title (Min Length: 4, Max Length: 100)",
           required:true,
@@ -38,7 +38,7 @@ export class PropertyGenericService {
         }),
         new GenericFormField({
           _id:"pdesc",
-          type:"2",
+          type:"5912f7194c3181110079e09f",
           model:field.body,
           placeholder:"title2 (Min Length: 4, Max Length: 100)",
           required:true,
@@ -47,7 +47,7 @@ export class PropertyGenericService {
         }),
         new GenericFormField({
           _id:"ptype",
-          type:"3",
+          type:"5912f82d4c3181110079e0a6",
           model:field.body,
           placeholder:"title3 (Min Length: 4, Max Length: 100)",
           required:true,
@@ -57,7 +57,7 @@ export class PropertyGenericService {
         }),
         new GenericFormField({
           _id:"categid",
-          type:"3",
+          type:"5912f82d4c3181110079e0a6",
           model:field["config"],
           visibleClause:'5912f8194c3181110079e0a5,5912f82d4c3181110079e0a6',
           placeholder:"Type d'objet lié",
@@ -73,7 +73,7 @@ export class PropertyGenericService {
         }),
         new GenericFormField({
           _id:"textminl",
-          type:"1",
+          type:"5912f7034c3181110079e09e",
           model:field["config"],
           visibleClause:'5912f7194c3181110079e09f,5912f7034c3181110079e09e',
           placeholder:"Taille mini",
@@ -83,7 +83,7 @@ export class PropertyGenericService {
         }),
         new GenericFormField({
           _id:"textmaxl",
-          type:"1",
+          type:"5912f7034c3181110079e09e",
           model:field["config"],
           visibleClause:'5912f7194c3181110079e09f,5912f7034c3181110079e09e',
           placeholder:"Taille maxi",
@@ -94,14 +94,14 @@ export class PropertyGenericService {
         new GenericFormField({
           _id:"multiling",
           model:field,
-          type:"4",
+          type:"5912f8144c3181110079e0a4",
           placeholder:"Multilingue",
           required:true
         }),
         new GenericFormField({
           _id:"isTitleCol",
           model:field["specifics"][this.globalService.project._id+this.globalService.table._id],
-          type:"4",
+          type:"5912f8144c3181110079e0a4",
           placeholder:"Titre",
           required:true
         })];

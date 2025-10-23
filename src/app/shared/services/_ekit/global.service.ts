@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { LocalStoreService } from '../local-store.service';
 import { Project } from 'app/shared/models/_ekit/project.model';
 import { Table } from 'app/shared/models/_ekit/table.model';
@@ -30,5 +30,12 @@ export class GlobalService {
   }
   set table(value: Table) {
     this._table = value;
+  }
+  private _appLang = signal("fr");
+  get appLang():WritableSignal<string> {
+    return this._appLang;
+  }
+  set appLang(value: string) {
+    this._appLang.set(value);
   }
 }

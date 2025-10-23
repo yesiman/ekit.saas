@@ -13,7 +13,7 @@ export class TableGenericService {
           new GenericFormField({
             _id:"plib",
             model:table.body,
-            type:"1",
+            type:"5912f7034c3181110079e09e",
             placeholder:"Title (Min Length: 4, Max Length: 100)",
             required:true,
             minLength:-1,
@@ -22,7 +22,7 @@ export class TableGenericService {
           new GenericFormField({
             _id:"pdesc",
             model:table.body,
-            type:"2",
+            type:"5912f7194c3181110079e09f",
             placeholder:"title2 (Min Length: 4, Max Length: 100)",
             required:true,
             minLength:-1,

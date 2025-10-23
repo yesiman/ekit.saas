@@ -5,6 +5,7 @@ import langs from 'assets/ressources/langs.json'
 import { ActivatedRoute } from '@angular/router';
 import { ApisService } from 'app/shared/services/_ekit/apis.service';
 import { Project } from 'app/shared/models/_ekit/project.model';
+import { GlobalService } from 'app/shared/services/_ekit/global.service';
 
 @Component({
     selector: 'app-project',
@@ -32,7 +33,7 @@ export class ProjectComponent implements OnInit {
   rowData=[];
   agGridTheme = themeBalham.withParams({fontFamily: 'Poppins',});
 
-  constructor(private apisService:ApisService) { }
+  constructor(private apisService:ApisService,private globalService:GlobalService) { }
   
   isLangSelected(langCode:string):boolean {
     const findResult = this._project.langs.find(lang => { return (lang == langCode)});
@@ -77,7 +78,7 @@ export class ProjectComponent implements OnInit {
         this.console.log(this._project);
         this.initializeDataComp();
       } else {
-        this.apisService.getProject(routeParams.projectuid,"fr").subscribe((data:any) => {
+        this.apisService.getProject(routeParams.projectuid,this.globalService.appLang()).subscribe((data:any) => {
           this._project = data.result;
           //this.console.log(this._project);
           this.initializeDataComp();
@@ -93,7 +94,7 @@ export class ProjectComponent implements OnInit {
   valid() {
     // FILTER ON CHECKED AND GET LANG CODES
     this._project.langs = this.rowData.filter(row => row.actif ).map(row => { return row.code } );
-    this.apisService.save(this._project,"projects","fr").subscribe((data) => {
+    this.apisService.save(this._project,"projects",this.globalService.appLang()).subscribe((data) => {
       this.console.log("data",data);
     });
   }

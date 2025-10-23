@@ -35,6 +35,10 @@ export class HeaderTopComponent implements OnInit, OnDestroy {
     name: 'FR',
     code: 'fr',
     flag: 'fr'
+  },{
+    name: 'EN',
+    code: 'en',
+    flag: 'en'
   }];
   currentLang = this.availableLangs[0];
 

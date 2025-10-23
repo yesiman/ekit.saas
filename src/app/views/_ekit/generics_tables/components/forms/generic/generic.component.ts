@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -23,6 +23,7 @@ import { GenericFormField } from '../../../models/genericFormField.model';
 import { ApisService } from 'app/shared/services/_ekit/apis.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-generic',
@@ -44,6 +45,7 @@ import { GlobalService } from 'app/shared/services/_ekit/global.service';
       MatButtonModule,
       MatIconModule,
       MatStepperModule,
+      MatExpansionModule,
       ReactiveFormsModule,
       MatDialogModule,
       MatSelectModule,
@@ -59,10 +61,12 @@ export class GenericComponent {
   _entity:any;
   _type:string;
   fields:GenericFormField[];
+  panelOpenState=false;
+  public isFullScreen = false;
   //
   constructor(public globalService:GlobalService, private dialogRef: MatDialogRef<GenericComponent, { saved: boolean; value?: any }>,
     @Inject(MAT_DIALOG_DATA) public data: { value?: any, fields:any, type:string },
-    private apisService:ApisService) {
+    private apisService:ApisService,private el: ElementRef, private renderer: Renderer2) {
     this._entity =data.value;
     this.fields = data.fields;
     this.datatypes = datatypes;
@@ -88,8 +92,24 @@ export class GenericComponent {
     }
     
   }
+  /**
+   * SWITCH POPUP FULLSCREEN/NORMAL MODE
+   * @returns 
+   */
+  toggleFullscreen() {
+    const dialogElement = this.el.nativeElement.closest('mat-dialog-container');
+    if (!dialogElement) return;
+    if (this.isFullScreen) {
+      // Leave fullscreen mode
+      this.renderer.removeClass(dialogElement, 'fullscreen');
+    } else {
+      // Enter fullscreen mode
+      this.renderer.addClass(dialogElement, 'fullscreen');
+    }
+    this.isFullScreen = !this.isFullScreen;
+  }
   submit() {
-    this.apisService.save(this._entity,this._type,"fr").subscribe((data) => {
+    this.apisService.save(this._entity,this._type,this.globalService.appLang()).subscribe((data) => {
       this.dialogRef.close({ saved: true });
     });
   }

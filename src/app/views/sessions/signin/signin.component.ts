@@ -11,6 +11,7 @@ import { egretAnimations } from 'app/shared/animations/egret-animations';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
+import { GlobalService } from 'app/shared/services/_ekit/global.service';
 
 declare global {
   interface Window {
@@ -46,14 +47,14 @@ export class SigninComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private jwtAuth: JwtAuthService,
     private egretLoader: AppLoaderService,
-    private http:HttpClient, private translate:TranslateService
+    private http:HttpClient, private translate:TranslateService,private globalService:GlobalService
   ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
 
-    this.translate.use("fr");
+    this.translate.use(this.globalService.appLang());
 
     this.signupForm = this.fb.group({
       email: ['support@ui-lib.com', [Validators.required, Validators.email]],

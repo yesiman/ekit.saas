@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, ɵrestoreComponentResolutionQueue } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 import type { CellClickedEvent, ColDef, GridReadyEvent } from 'ag-grid-community';
 import { environment } from 'environments/environment';
@@ -37,6 +37,7 @@ import { CustomAutocompleteEditorComponent } from './components/grid/cells/custo
 import { RichtextEditorComponent } from './components/forms/editors/richtext-editor/richtext-editor.component';
 import { da } from 'date-fns/locale';
 import { MapEditorComponent } from './components/forms/editors/map-editor/map-editor.component';
+import { EntityGenericService } from './services/forms/generic/entity-generic.service';
 
 // Row Data Interface
 interface IRow {
@@ -71,6 +72,7 @@ interface IRow {
 export class TablesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  gs = inject(GlobalService);
 
   datatypes;
   agGridTheme:any;
@@ -80,12 +82,17 @@ export class TablesComponent {
     private http: HttpClient,public globalService:GlobalService,
     private apisServices:ApisService,private _location: Location,
     private dialog:MatDialog, private tablesGenericService:TableGenericService,
-    private propertyGenericService:PropertyGenericService,private themeService:ThemeService
+    private propertyGenericService:PropertyGenericService,
+    private entityGenericService:EntityGenericService,
+    private themeService:ThemeService
   ) {
     this.datatypes = datatypes;
   }
 
   ngOnInit() {
+
+    
+
     this.route.params.subscribe(routeParams => {
       this.loading = true;
       this.rowData = [];
@@ -95,7 +102,7 @@ export class TablesComponent {
       this.agGridTheme = this.themeService.getGridTheme();
       //
       if (routeParams.tableuid) {
-        this.apisServices.getTable(routeParams.tableuid,"fr").subscribe((data:any) => {
+        this.apisServices.getTable(routeParams.tableuid,this.globalService.appLang()).subscribe((data:any) => {
           this.globalService.table = data.result;
           //this.console.log(this._project);
           setTimeout(() => {
@@ -113,6 +120,13 @@ export class TablesComponent {
 	  });
   }
 
+  
+ logLangChange = effect(() => {
+      const current = this.gs.appLang();   // <- lecture du signal
+      this.loadPage();
+      // ... placer ici tout traitement (side effects) déclenché par le changement
+  });
+
   rowData: IRow[] = [];
   colDefs: ColDef[] = [];
 
@@ -129,7 +143,7 @@ export class TablesComponent {
    * */ 
   loadPage() {
     
-    this.http.post(`${environment.apiURL}/datas/fr`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table._id, coordinates:"Y" })
+    this.http.post(`${environment.apiURL}/datas/`+this.globalService.appLang(), { projectUID:this.globalService.project._id, tableUID:this.globalService.table._id, coordinates:"Y" })
       .pipe(
         map((res: any) => {
           //this.gridApi.setRowCount();
@@ -163,6 +177,7 @@ export class TablesComponent {
       // TEXTE BASIC
       case "5912f7034c3181110079e09e":
         return EditableTextCellTranslate;
+      case "5a782af376657811002d0416":
       case "5b33228daf1f20140098fbf8":
         return "agDateCellEditor";
       case "5912f7194c3181110079e09f":
@@ -220,9 +235,11 @@ fetchUsers(q: string, page: number) {
         else {
           return "";
         }
+      // DATE
+      case "5a782af376657811002d0416":
       case "5b33228daf1f20140098fbf8":
-        console.log("getCellEditorTemplateValueFormater");
-        return new Date();
+        //console.log("getCellEditorTemplateValueFormater");
+        //return new Date().toLocaleDateString();
     }
     return null;
   }
@@ -247,6 +264,7 @@ fetchUsers(q: string, page: number) {
     switch (ptype) {
       case "5912f8144c3181110079e0a4":
         return "boolean";
+      case "5a782af376657811002d0416":
       case "5b33228daf1f20140098fbf8":
         return "dateTime";
       default:
@@ -263,6 +281,7 @@ fetchUsers(q: string, page: number) {
     switch (item.body.ptype) {
       case "5912f8144c3181110079e0a4":
         return (((p.data["p"+item.body.objectid] == true) || (p.data["p"+item.body.objectid] == "true")));
+      case "5a782af376657811002d0416":
       case "5b33228daf1f20140098fbf8":
         console.log("getCellEditorTemplateValueGetter");
         return (p.data["p"+item.body.objectid]?new Date(p.data["p"+item.body.objectid]).toLocaleDateString():"");
@@ -300,9 +319,9 @@ fetchUsers(q: string, page: number) {
 
   async addColumn(fieldUID?:string) {
     let data:any;
-    let tables:any = await lastValueFrom(this.apisServices.getProjectTables("fr"));
+    let tables:any = await lastValueFrom(this.apisServices.getProjectTables(this.globalService.appLang()));
     if (fieldUID) {
-      data = await lastValueFrom(this.apisServices.getField(fieldUID,"fr"));
+      data = await lastValueFrom(this.apisServices.getField(fieldUID,this.globalService.appLang()));
       //console.log('data',data);
       const fields:any = this.propertyGenericService.getColumns(data.result,tables.result);
       console.log('fields',fields);
@@ -327,7 +346,7 @@ fetchUsers(q: string, page: number) {
     
     
     if (tableUID) {
-      this.apisServices.getTable(tableUID,"fr").subscribe((data:any) => {
+      this.apisServices.getTable(tableUID,this.globalService.appLang()).subscribe((data:any) => {
         data = data.result;
         //this.console.log(this._project);
         const fields = this.tablesGenericService.getColumns(data);
@@ -340,6 +359,31 @@ fetchUsers(q: string, page: number) {
         const fields = this.tablesGenericService.getColumns(data);
         this.loadDialogRef("prototypes",data,fields);
         
+    }
+
+  }
+
+  addRow(entityUID:string = null) {
+    let data:any;
+    
+
+    if (entityUID) {
+      console.log("entityUID",entityUID);
+      this.apisServices.getEntity(entityUID,this.globalService.appLang()).subscribe((data:any) => {
+        console.log("data",data);
+        data = data.result as Entity;
+        
+        //this.console.log(this._project);
+        const fields = this.entityGenericService.getColumns(data,this.colDefs);
+        this.loadDialogRef("objects",data,fields);
+      })
+    } else {
+        console.log("entityUID",entityUID);
+        data = new Entity();
+        data._id = "-1";
+        //data.projects.push(this.globalService.project._id);
+        const fields = this.entityGenericService.getColumns(data,this.colDefs);
+        this.loadDialogRef("objects",data,fields);
     }
 
   }
@@ -359,7 +403,11 @@ fetchUsers(q: string, page: number) {
     });
   }
 
-
+  /**
+   * WHEN OBJECT CELL CLICKED SHOW DATATAYPE CORRESPONDING EDITION FORM IF NEEDED EX:geolocation
+   * @param e 
+   * @returns 
+   */
   async onCellClicked(e:CellClickedEvent) {
     console.log("onCellClicked",e);
 
@@ -368,13 +416,12 @@ fetchUsers(q: string, page: number) {
     const objectuid = e.data._id;
     console.log({ value:e.data[fielduid], objectuid:objectuid });
     let popupComponent:any = null;
+    // TEST ON PTYPE AND SHOW RELATED EDITION POPUP
     switch (ptype) {
       case "5912f7204c3181110079e0a0":
-        // TEST ON PTYPE AND SHOW RELATED EDITION POPUP
         popupComponent = RichtextEditorComponent;
         break;
       case "5912f7344c3181110079e0a3":
-        // TEST ON PTYPE AND SHOW RELATED EDITION POPUP
         popupComponent = MapEditorComponent;
         break;
         
@@ -392,22 +439,17 @@ fetchUsers(q: string, page: number) {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      // UPDATE SERVER DATA ON VALUE RETURN CHANGE EVENT
       if (result?.saved) {
-        console.log(result.editorData);
-        e.data[fielduid] = result.value;
-          //this.loadDataGrid();
-          let o = {};
-          o[fielduid] = e.data[fielduid];
-          
+        e.data[fielduid] = e.value = result.value;
         e.data.objectid = this.saveObjectField((objectuid?objectuid:"-1"),e.data);
+        e.api.refreshCells();
       }
-    });
-
-    
+    });    
   }
 
   /**
-   * 
+   * UPDATE SERVER DATA ON CELL CHANGE EVENT
    * @param params 
    * 
    */
@@ -417,7 +459,6 @@ fetchUsers(q: string, page: number) {
     const { oldValue, newValue } = e;
     //
     data.objectid = await this.saveObjectField((data.objectid?data.objectid:"-1"),data);
-    console.log("data.objectid",data.objectid);
   }
 
   async saveObjectField(id:string,body:any) {
@@ -428,17 +469,19 @@ fetchUsers(q: string, page: number) {
     delete body.id
     entity.body = body;
     console.log("entity",entity);
-    const saveResult:any = await lastValueFrom(this.apisServices.save(entity,"objects","fr"));
+    const saveResult:any = await lastValueFrom(this.apisServices.save(entity,"objects",this.globalService.appLang()));
     return saveResult.ok;
   }
 
   loadDataGrid() {
     // A mettre dans un service EKIT
     //
+    
     if (this.globalService.table) {
       
       // IF SELECTED TABLE LOAD DYNAMIC COLUMS
-      this.apisServices.getDynamicTableColumns("fr").pipe(
+      
+      this.apisServices.getDynamicTableColumns(this.globalService.appLang()).pipe(
           map((res: any) => {
             return res.result.map(item => ({
                 field: "p"+item._id,
@@ -508,7 +551,7 @@ fetchUsers(q: string, page: number) {
               sortable: false,
               cellRendererParams: () => ({
                 onEdit: this.edit.bind(this),
-                //onDelete: this.onDelete.bind(this),
+                onDelete: this.delete.bind(this),
               }),
               filter: false,pinned: 'right'
             }
@@ -543,13 +586,13 @@ fetchUsers(q: string, page: number) {
         { field: "button", cellRenderer: ActionCellRendererComponent,width: 100,
           cellRendererParams: () => ({
             onEdit: this.edit.bind(this),
-            //onDelete: this.onDelete.bind(this),
+            onDelete: this.delete.bind(this),
           }),
           sortable: false,
           filter: false,pinned: 'right'},
       ];
       // LOADIN PROJECTS TABLES
-      this.apisServices.getProjectTables("fr")
+      this.apisServices.getProjectTables(this.globalService.appLang())
         .pipe(
           map((res: any) => {
             return res.result;
@@ -570,7 +613,7 @@ fetchUsers(q: string, page: number) {
   edit(row: any) {
     console.log('edit depuis parent', row);
     if (this.globalService.table) {
-      //this.addColumn(row);
+      this.addRow(row);
       // OBJECT EDITION POPUP MODE
 
     }
@@ -579,6 +622,15 @@ fetchUsers(q: string, page: number) {
     }
     
     // ... ta logique
+  }
+  delete(row: any) {
+    let repo = "prototypes"
+    if (this.globalService.project && this.globalService.table) {
+      repo = "objects"
+    }
+    this.apisServices.delete(row,repo,this.globalService.appLang()).subscribe((data:any) => {
+      this.loadDataGrid();
+    })
   }
 
   // HERE WHEN GRID IS LOADED WHE CAN LOAD COLUMS

@@ -1,0 +1,29 @@
+.mat-mdc-dialog-content {
+  max-height: unset !important;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-dialog-container.fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  z-index: 1000 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-dialog-container.fullscreen mat-dialog-content {
+  flex: 1;
+  overflow: auto;
+}

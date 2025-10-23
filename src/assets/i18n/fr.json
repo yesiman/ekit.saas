@@ -12,6 +12,13 @@
   "SIDEBAR": {
     "PROJECTS":"Mes projets" 
   },
+  "TABLES": {
+    
+  },
+  "OBJECTS": {
+    
+  },
+  
   "DASHBOARD": "Dashboard",
   "APPS": "Apps",
   "INBOX": "Inbox",
@@ -49,7 +56,6 @@
   "UPLOAD": "Upload",
   "WIZARD": "Wizard",
 
-  "TABLES": "Tables",
   "TOUR": "Tour",
   "FULLSCREEN": "Fullscreen",
   "PAGING": "Paging",
