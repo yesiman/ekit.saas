@@ -125,7 +125,7 @@ export class ProjectComponent implements OnInit {
     const lang = this.rowData.find(row => (row.defaultLang == true));
     this._project.defaultLang = lang.code;
     this.apisService.save(this._project,"projects",this.globalService.appLang()).subscribe((data) => {
-      this.console.log("data",data);
+
     });
   }
 }

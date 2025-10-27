@@ -22,9 +22,7 @@ import { AddHeaderButtonComponent } from 'app/views/_ekit/generics_tables/compon
 import { Field } from 'app/shared/models/_ekit/field.model';
 import { util_d$1 } from 'echarts/types/dist/shared';
 import { Entity } from 'app/shared/models/_ekit/entity.model';
-import { PropertieComponent } from '../propertie/propertie.component';
 import { MatDialog } from '@angular/material/dialog';
-import { PropertieModule } from '../propertie/propertie.module';
 import { GenericComponent } from './components/forms/generic/generic.component';
 import { GenericFormField } from './models/genericFormField.model';
 import datatypes from 'assets/ressources/datatypes.json'
@@ -124,7 +122,8 @@ export class TablesComponent {
   
  logLangChange = effect(() => {
       const currentLangSignal = this.gs.appLang();   // <- lecture du signal
-      this.loadPage();
+      //this.loadPage();
+    this.loadDataGrid();
   });
   logThemeChange = effect(() => {
       const currentGridTheme = this.ts.darkMode();   // <- lecture du signal
@@ -160,9 +159,10 @@ export class TablesComponent {
           return throwError(error);
         })
     ).subscribe((data) => {
-
+      
       this.rowData = data;
       setTimeout(() => {
+        //this.gridApi.refreshCells();  
         //const allColumnIds = this.gridApi.getColumns()?.map(col => col.getColId());
         //this.gridApi.autoSizeColumns(allColumnIds);
       });

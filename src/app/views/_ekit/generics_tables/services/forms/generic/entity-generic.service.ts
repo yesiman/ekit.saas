@@ -12,11 +12,11 @@ export class EntityGenericService {
         let fields = [];
         
         coldef.forEach(element => {
-          if (element.headerComponentParams) {
-            console.log(element);
+          if (element.headerComponentParams?.field) {
+            console.log(element.headerComponentParams);
             fields.push(
               new GenericFormField({
-                _id:"p"+element.headerComponentParams.uid,
+                _id:"p"+element.headerComponentParams.field._id,
                 model:entity.body,
                 type:element.headerComponentParams.ptype,
                 placeholder:element.headerName,

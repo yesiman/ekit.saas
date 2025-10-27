@@ -94,6 +94,7 @@ export class PropertyGenericService {
         new GenericFormField({
           _id:"multiling",
           model:field,
+          visibleClause:'5912f7034c3181110079e09e,5912f7194c3181110079e09f,5912f7204c3181110079e0a0',
           type:"5912f8144c3181110079e0a4",
           placeholder:"Multilingue",
           required:false

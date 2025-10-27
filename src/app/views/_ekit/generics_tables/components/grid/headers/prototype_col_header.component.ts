@@ -71,7 +71,6 @@ export class PrototypeColHeader implements IInnerHeaderAngularComp {
         //console.log("params",params);
         this.icon.set(params.icon);
         this.displayName.set(params.displayName);
-        console.log(params);
         this.params = params;
     }
 

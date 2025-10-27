@@ -1,0 +1,12 @@
+<div class="studio">
+  <aside>
+    <app-file-tree
+      (open)="editor.openFile($event)"
+      >
+    </app-file-tree>
+    <!--(createFile)="onCreate($event.parentId)"-->
+  </aside>
+  <main>
+    <app-editor-tabs #editor></app-editor-tabs>
+  </main>
+</div>

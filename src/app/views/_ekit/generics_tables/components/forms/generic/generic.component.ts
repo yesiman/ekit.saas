@@ -71,6 +71,7 @@ export class GenericComponent {
     this.fields = data.fields;
     this.datatypes = datatypes;
     this._type = data.type;
+    console.log("this.fields",this.fields);
   }
   ngOnInit() { 
     //INIT PROJECT FORM

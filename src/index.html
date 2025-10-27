@@ -79,9 +79,28 @@
       }
     }
   </style>
+  
 </head>
 
 <body class="">
+  <script>
+    window.require = { paths: { vs: '/assets/vs' } };
+
+  // Selon tes fichiers, tu as bien 'htmlWorker.js' (CamelCase)
+  (self).MonacoEnvironment = {
+    baseUrl: '/assets/vs',
+    getWorkerUrl(_moduleId, label) {
+      const base = self.location.origin + '/assets/vs';
+      return label === 'json'        ? base + '/language/json/jsonWorker.js'
+           : label === 'css'         ? base + '/language/css/cssWorker.js'
+           : label === 'html'        ? base + '/language/html/htmlWorker.js'
+           : (label === 'typescript' || label === 'javascript')
+                                      ? base + '/language/typescript/tsWorker.js'
+           :                           base + '/base/worker/workerMain.js';
+    }
+  };
+  </script>
+  
   <app-root>
     <div class="app-loader">
       <div class="spinner">

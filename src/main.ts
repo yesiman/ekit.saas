@@ -48,7 +48,6 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withJsonpSupport(), withInterceptors([tokenInterceptorFn,errorInterceptorFn])),
     RoutePartsService,
     ThemeService,
-    
     LayoutService,
     AppLoaderService,
     AuthGuard,

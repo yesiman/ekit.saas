@@ -1,0 +1,24 @@
+<ul class="tree">
+  <ng-container *ngFor="let node of (tree$ | async)">
+    <ng-container [ngTemplateOutlet]="renderNode" [ngTemplateOutletContext]="{node: node, level: 0}"></ng-container>
+  </ng-container>
+</ul>
+
+<ng-template #renderNode let-node="node" let-level="level">
+  <li [style.paddingLeft.px]="level * 12" [class.selected]="node.id === selectedId">
+    <button *ngIf="node.kind==='folder'" (click)="toggle(node)">
+      {{ expanded.has(node.id) ? '📂' : '📁' }}
+    </button>
+    <span *ngIf="node.kind==='file'" (click)="toggle(node)">📄</span>
+    <span class="name" (dblclick)="node.kind==='file' && rename.emit({id: node.id, name: node.name})">
+      {{ node.name }}
+    </span>
+    <button *ngIf="node.kind==='folder'" (click)="createFile.emit({ parentId: node.id })">＋</button>
+  </li>
+
+  <ul *ngIf="node.children?.length && expanded.has(node.id)">
+    <ng-container *ngFor="let child of node.children">
+      <ng-container [ngTemplateOutlet]="renderNode" [ngTemplateOutletContext]="{node: child, level: level + 1}"></ng-container>
+    </ng-container>
+  </ul>
+</ng-template>

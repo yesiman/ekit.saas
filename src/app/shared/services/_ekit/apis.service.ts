@@ -36,8 +36,8 @@ export class ApisService {
     return this.http.jsonp('https://maps.googleapis.com/maps/api/js?key='+environment.googleConfig.mapKey, 'callback');
   }
   save = (obj:Iobject,repo:string,lang:string) => {
+    console.log(repo,obj);
     if (obj._id == "-1") {
-      console.log(repo);
       return this.http.post(`${environment.apiURL}/${repo}/${lang}/`, obj)
     } 
     else {

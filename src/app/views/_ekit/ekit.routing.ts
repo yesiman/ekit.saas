@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
 import { TablesComponent } from './generics_tables/tables.component';
 import { ProjectComponent } from './project/project.component';
-import { PropertieComponent } from './propertie/propertie.component';
-import { TableComponent } from './table/table.component';
-
 
 
 export const EkitRoutes: Routes = [
@@ -26,14 +23,9 @@ export const EkitRoutes: Routes = [
         data: { title: 'Tables', breadcrumb: 'Tables' }
       },
       {
-        path: 'table/:tableuid',
-        loadChildren: () => import('./table/table.module').then(m => m.TableModule),
-        data: { title: 'Propertie', breadcrumb: 'Propertie' }
-      },
-      {
-        path: 'field/:fielduid',
-        loadChildren: () => import('./propertie/propertie.module').then(m => m.PropertieModule),
-        data: { title: 'Propertie', breadcrumb: 'Propertie' }
+        path: 'editor/:projectuid',
+        loadChildren: () => import('./template-editor/template-editor.module').then(m => m.TemplateEditorModule),
+        data: { title: 'Tables', breadcrumb: 'Tables' }
       },
     ]
   }

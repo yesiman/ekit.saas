@@ -1,0 +1,10 @@
+.tabs { display:flex; gap:4px; border-bottom:1px solid #e5e7eb; background:#fafafa; }
+.tab { padding:6px 10px; cursor:pointer; border-top-left-radius:6px; border-top-right-radius:6px; }
+.tab.active { background:white; border:1px solid #e5e7eb; border-bottom:none; }
+.tab .x { margin-left:6px; border:none; background:transparent; cursor:pointer; }
+.editor-wrap { height: calc(100vh - 140px); }
+
+ngx-monaco-editor, ngx-monaco-editor > div {
+  display: block;
+  height: 100%;
+}
