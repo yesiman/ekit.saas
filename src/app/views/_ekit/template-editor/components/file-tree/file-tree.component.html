@@ -1,5 +1,5 @@
 <ul class="tree">
-  <ng-container *ngFor="let node of (tree$ | async)">
+  <ng-container *ngFor="let node of tree$">
     <ng-container [ngTemplateOutlet]="renderNode" [ngTemplateOutletContext]="{node: node, level: 0}"></ng-container>
   </ng-container>
 </ul>

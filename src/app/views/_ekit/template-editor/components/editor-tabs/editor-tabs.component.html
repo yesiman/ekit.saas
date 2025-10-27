@@ -1,17 +1,29 @@
-<div class="tabs">
-  <div *ngFor="let t of tabs" class="tab" [class.active]="t.id===activeId" (click)="activeId=t.id">
-    {{ t.doc.name }} <span *ngIf="t.dirty">●</span>
-    <button class="x" (click)="close(t.id); $event.stopPropagation()">×</button>
+
+
+
+@if (mode == "preview") {
+  <iframe
+          #frame
+          *ngIf="safeUrl"
+          [src]="safeUrl"
+          sandbox="allow-scripts allow-same-origin"
+          referrerpolicy="no-referrer"
+          (load)="onIframeLoad()"></iframe>
+}
+@if (mode == "code") {
+  <div class="tabs">
+    <div *ngFor="let t of tabs" class="tab" [class.active]="t.id===activeId" (click)="activeId=t.id">
+      {{ t.doc.name }} <span *ngIf="t.dirty">●</span>
+      <button class="x" (click)="close(t.id); $event.stopPropagation()">×</button>
+    </div>
   </div>
-</div>
-
-
-
-<div *ngFor="let t of tabs">
-  <div *ngIf="t.id===activeId" class="editor-wrap">
-    <ngx-monaco-editor
-      [options]="editorOptionsBase" 
-      (onInit)="onEditorInit($event)">
-    </ngx-monaco-editor>
+  <div *ngFor="let t of tabs">
+    <div *ngIf="t.id===activeId" class="editor-wrap">
+      <ngx-monaco-editor
+        [options]="editorOptionsBase" 
+        (onInit)="onEditorInit($event)">
+      </ngx-monaco-editor>
+    </div>
   </div>
-</div>
+}
+  

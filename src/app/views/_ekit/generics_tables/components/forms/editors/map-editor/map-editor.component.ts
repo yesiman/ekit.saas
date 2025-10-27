@@ -19,7 +19,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { Field } from 'app/shared/models/_ekit/field.model';
 import { Iobject } from 'app/shared/models/_ekit/iobject.model';
-import { ApisService } from 'app/shared/services/_ekit/apis.service';
+import { EkitApisService } from 'app/shared/services/_ekit/ekit.apis.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { QuillModule } from 'ngx-quill';
@@ -71,7 +71,7 @@ export class MapEditorComponent {
   //
   constructor(public globalService:GlobalService, private dialogRef: MatDialogRef<any, { saved: boolean; value?: any }>,
     @Inject(MAT_DIALOG_DATA) public data: { value?:string, objectuid:string },
-    private apisService:ApisService,httpClient: HttpClient) {
+    private apisService:EkitApisService,httpClient: HttpClient) {
     this.editorData = data.value;
     this.apiLoaded = this.apisService.loadGmapLibrary()
       .pipe(

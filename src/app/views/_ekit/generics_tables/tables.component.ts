@@ -12,7 +12,7 @@ import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { CommonModule,Location } from '@angular/common';
 import { EditableRelationCell } from './components/grid/cells/relation-cell-renderer.component';
 import { FormsModule } from '@angular/forms';
-import { ApisService } from 'app/shared/services/_ekit/apis.service';
+import { EkitApisService } from 'app/shared/services/_ekit/ekit.apis.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -79,7 +79,7 @@ export class TablesComponent {
   loading = true;
   constructor(
     private http: HttpClient,public globalService:GlobalService,
-    private apisServices:ApisService,private _location: Location,
+    private apisServices:EkitApisService,private _location: Location,
     private dialog:MatDialog, private tablesGenericService:TableGenericService,
     private propertyGenericService:PropertyGenericService,
     private entityGenericService:EntityGenericService,

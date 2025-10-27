@@ -3,7 +3,7 @@ import { GenericFormField } from "../../../models/genericFormField.model";
 import datatypes from 'assets/ressources/datatypes.json'
 import { Injectable } from "@angular/core";
 import { GlobalService } from "app/shared/services/_ekit/global.service";
-import { ApisService } from "app/shared/services/_ekit/apis.service";
+import { EkitApisService } from "app/shared/services/_ekit/ekit.apis.service";
 import { catchError, map, throwError } from "rxjs";
 
 @Injectable({
@@ -12,7 +12,7 @@ import { catchError, map, throwError } from "rxjs";
 
 export class PropertyGenericService {
   datatypes;
-  constructor(private globalService:GlobalService, private apisServices:ApisService) {
+  constructor(private globalService:GlobalService, private apisServices:EkitApisService) {
     this.datatypes = datatypes;
     //LOAD PROTOTYPES FOR TYPE PROTOTYPE LIST OPTIONS
     

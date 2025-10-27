@@ -3,7 +3,7 @@ import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms
 import { themeBalham, type ColDef } from 'ag-grid-community';
 import langs from 'assets/ressources/langs.json'
 import { ActivatedRoute } from '@angular/router';
-import { ApisService } from 'app/shared/services/_ekit/apis.service';
+import { EkitApisService } from 'app/shared/services/_ekit/ekit.apis.service';
 import { Project } from 'app/shared/models/_ekit/project.model';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 
@@ -58,7 +58,7 @@ export class ProjectComponent implements OnInit {
   rowData=[];
   agGridTheme = themeBalham.withParams({fontFamily: 'Poppins',});
 
-  constructor(private apisService:ApisService,private globalService:GlobalService) { }
+  constructor(private apisService:EkitApisService,private globalService:GlobalService) { }
   
   isLangSelected(langCode:string):boolean {
     const findResult = this._project.langs.find(lang => { return (lang == langCode)});

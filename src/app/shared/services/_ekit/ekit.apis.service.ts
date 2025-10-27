@@ -11,7 +11,7 @@ import { Iobject } from 'app/shared/models/_ekit/iobject.model';
 })
 
 
-export class ApisService {
+export class EkitApisService {
   constructor(private http: HttpClient,private ls:LocalStoreService,private globalService:GlobalService) {}
   getDynamicTableColumns = (lang:string) => {
     return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table._id, coordinates:"X" })

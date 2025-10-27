@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 import { FileNode, FileDoc } from '../models/file.types';
+import { TemplatingApisService } from 'app/shared/services/_ekit/templating.apis.service';
 
 @Injectable({ providedIn: 'root' })
 export class FilesService {
-  private tree$ = new BehaviorSubject<FileNode[]>([
-    { id: 'root-1', name: 'templates', kind: 'folder', parentId: null, children: [
-      { id: 'f-1', name: 'blog.hbs', kind: 'file', parentId: 'root-1' },
-      { id: 'f-2', name: 'layout.hbs', kind: 'file', parentId: 'root-1' },
-    ]},
-    { id: 'root-2', name: 'partials', kind: 'folder', parentId: null, children: [] },
-  ]);
+  constructor (private templatingFileApis:TemplatingApisService) {
+  }
+  //private tree$ = 
+
+  private tree$ = new BehaviorSubject<FileNode[]>([]);
 
   private docs = new Map<string, FileDoc>([
     ['f-1', { id:'f-1', path:'templates/blog.hbs', name:'blog.hbs', language:'handlebars',
@@ -21,16 +20,22 @@ export class FilesService {
       content:'<!doctype html>\n<html>\n<body>{{{body}}}</body>\n</html>', version:3, updatedAt:new Date().toISOString() }],
   ]);
 
-  getTree(): Observable<FileNode[]> { return this.tree$.asObservable(); }
-
-  openFile(id: string): Observable<FileDoc> {
-    const doc = this.docs.get(id);
-    if (!doc) return throwError(() => new Error('Not found'));
-    // simulate latency
-    return of({ ...doc }).pipe(delay(80));
+  async getTree() {
+    return await lastValueFrom(this.templatingFileApis.getTree());
   }
 
-  saveFile(patch: Pick<FileDoc, 'id'|'content'|'version'>): Observable<FileDoc> {
+  async openFile(path: string) {
+    return await lastValueFrom(this.templatingFileApis.getFile(path));
+    
+  }
+
+  async saveFile(path: string,value:string) {
+    return await lastValueFrom(this.templatingFileApis.saveFile(path,value));
+    
+  }
+
+  /*saveFile(patch: Pick<FileDoc, 'id'|'content'|'version'>): Observable<FileDoc> {
+
     const current = this.docs.get(patch.id);
     if (!current) return throwError(() => new Error('Not found'));
 
@@ -46,7 +51,7 @@ export class FilesService {
     };
     this.docs.set(next.id, next);
     return of({ ...next }).pipe(delay(80));
-  }
+  }*/
 
   createFile(parentFolderId: string, name: string): Observable<FileNode> {
     const id = uuid();

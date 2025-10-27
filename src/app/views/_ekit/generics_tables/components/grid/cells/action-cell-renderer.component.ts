@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { ApisService } from 'app/shared/services/_ekit/apis.service';
+import { EkitApisService } from 'app/shared/services/_ekit/ekit.apis.service';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { AppConfirmService } from 'app/shared/services/app-confirm/app-confirm.service';
 

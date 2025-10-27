@@ -20,7 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Field } from 'app/shared/models/_ekit/field.model';
 import { Iobject } from 'app/shared/models/_ekit/iobject.model';
 import { GenericFormField } from '../../../models/genericFormField.model';
-import { ApisService } from 'app/shared/services/_ekit/apis.service';
+import { EkitApisService } from 'app/shared/services/_ekit/ekit.apis.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { GlobalService } from 'app/shared/services/_ekit/global.service';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -66,7 +66,7 @@ export class GenericComponent {
   //
   constructor(public globalService:GlobalService, private dialogRef: MatDialogRef<GenericComponent, { saved: boolean; value?: any }>,
     @Inject(MAT_DIALOG_DATA) public data: { value?: any, fields:any, type:string },
-    private apisService:ApisService,private el: ElementRef, private renderer: Renderer2) {
+    private apisService:EkitApisService,private el: ElementRef, private renderer: Renderer2) {
     this._entity =data.value;
     this.fields = data.fields;
     this.datatypes = datatypes;
