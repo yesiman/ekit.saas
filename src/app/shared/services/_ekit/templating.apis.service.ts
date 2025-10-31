@@ -13,13 +13,13 @@ import { Iobject } from 'app/shared/models/_ekit/iobject.model';
 
 export class TemplatingApisService {
   constructor(private http: HttpClient,private ls:LocalStoreService,private globalService:GlobalService) {}
-  getTree = () => {
-    return this.http.get(`${environment.apiURL}/templates/tree`);
+  getTree = (templateUID:string) => {
+    return this.http.get(`${environment.apiURL}/templates/tree/${templateUID}`);
   }
-  getFile = (path:string) => {
-    return this.http.post(`${environment.apiURL}/templates/file/`, {path:path});
+  getFile = (path:string,templateUID:string) => {
+    return this.http.post(`${environment.apiURL}/templates/file/${templateUID}`, {path:path});
   }
-  saveFile = (path:string, value:string) => {
-    return this.http.put(`${environment.apiURL}/templates/file/`, {path:path,content:value});
+  saveFile = (path:string, value:string,templateUID:string) => {
+    return this.http.put(`${environment.apiURL}/templates/file/${templateUID}`, {path:path,content:value});
   }
 }

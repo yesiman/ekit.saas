@@ -70,6 +70,7 @@ interface IRow {
 export class TablesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private type = "tables";
   gs = inject(GlobalService);
   ts = inject(ThemeService);
 
@@ -91,6 +92,7 @@ export class TablesComponent {
   ngOnInit() {
 
     
+    this.type = this.route.snapshot.data["type"];
 
     this.route.params.subscribe(routeParams => {
       this.loading = true;
@@ -357,6 +359,7 @@ fetchUsers(q: string, page: number) {
     } else {
         data = new Table();
         data._id = "-1";
+        data.type = this.type;
         data.projects.push(this.globalService.project._id);
         const fields = this.tablesGenericService.getColumns(data);
         this.loadDialogRef("prototypes",data,fields);
@@ -563,6 +566,7 @@ fetchUsers(q: string, page: number) {
         setTimeout(() => {
           const allColumnIds = this.gridApi.getColumns()?.map(col => col.getColId());
           this.gridApi.autoSizeColumns(allColumnIds);
+          
           this.loadPage();
         });
       })
@@ -587,7 +591,11 @@ fetchUsers(q: string, page: number) {
           filter: false,pinned: 'right'},
       ];
       // LOADIN PROJECTS TABLES
-      this.apisServices.getProjectTables(this.globalService.appLang())
+      let method = this.apisServices.getProjectTables(this.globalService.appLang());
+      if (this.type == "templates") {
+        method = this.apisServices.getProjectTemplates(this.globalService.appLang());
+      }
+      method
         .pipe(
           map((res: any) => {
             return res.result;

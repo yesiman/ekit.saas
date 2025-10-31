@@ -20,17 +20,17 @@ export class FilesService {
       content:'<!doctype html>\n<html>\n<body>{{{body}}}</body>\n</html>', version:3, updatedAt:new Date().toISOString() }],
   ]);
 
-  async getTree() {
-    return await lastValueFrom(this.templatingFileApis.getTree());
+  async getTree(templateUID:string) {
+    return await lastValueFrom(this.templatingFileApis.getTree(templateUID));
   }
 
-  async openFile(path: string) {
-    return await lastValueFrom(this.templatingFileApis.getFile(path));
+  async openFile(path: string,templateUID:string) {
+    return await lastValueFrom(this.templatingFileApis.getFile(path,templateUID));
     
   }
 
-  async saveFile(path: string,value:string) {
-    return await lastValueFrom(this.templatingFileApis.saveFile(path,value));
+  async saveFile(path: string,value:string,templateUID:string) {
+    return await lastValueFrom(this.templatingFileApis.saveFile(path,value,templateUID));
     
   }
 

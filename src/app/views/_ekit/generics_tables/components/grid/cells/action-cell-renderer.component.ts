@@ -43,7 +43,7 @@ import { AppConfirmService } from 'app/shared/services/app-confirm/app-confirm.s
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
   private router = inject(Router);
   params!: ICellRendererParams & {
-    onEdit?: (row: any) => void;
+    onEdit?: (row: any, type:string) => void;
     onDelete?: (row: any) => void;
   };
 
@@ -59,17 +59,16 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
   }
 
   onList() {
-    this.router.navigate(["/ekit/tables/"+this.globalService.project._id+"/"+this.params.data._id]);
+    this.router.navigate(["/ekit/"+(this.params.data.type == "tables"?"tables":"templates")+"/"+this.globalService.project._id+"/"+this.params.data._id]);
   }
 
   onEdit() {
     if (this.globalService.table) {
-      this.params?.onEdit?.(this.params.data.objectid);
+      this.params?.onEdit?.(this.params.data.objectid,this.params.data.type);
     }
     else {
-      this.params?.onEdit?.(this.params.data._id);
+      this.params?.onEdit?.(this.params.data._id,this.params.data.type);
     }
-    
   }
 
   onDelete() {

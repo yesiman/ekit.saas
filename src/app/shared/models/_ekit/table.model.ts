@@ -5,6 +5,7 @@ export class Table implements Iobject {
   body:any;
   versions?:string[];
   projects:string[];
+  type:string;
   specifics:any;
   constructor() {
     this.versions = ["fr"];

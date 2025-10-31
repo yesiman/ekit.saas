@@ -46,11 +46,12 @@ export class SidenavComponent {
   }
   ngAfterViewInit() {}
 
-  loadProject(prj) {
+  loadProjectData(prj,page) {
     //ON LOAD LE PROJET SELECTIONNE``
     this.globalService.project = null;
     this.ls.setItem("currentProject",prj)
-    this.router.navigate(["/ekit/tables/",prj._id]);
+    this.router.navigate([`/ekit/${page}/`,prj._id]);
   }
+  
 
 }

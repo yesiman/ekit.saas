@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output } from '@angular/core';
 import { FilesService } from '../../services/files.service';
 import { FileDoc, FileNode } from '../../models/file.types';
 import { CommonModule, AsyncPipe, NgForOf, NgIf } from '@angular/common';
@@ -19,6 +19,7 @@ export class FileTreeComponent {
   @Output() open = new EventEmitter<string>();
   @Output() createFile = new EventEmitter<{parentId: string}>();
   @Output() rename = new EventEmitter<{id: string, name: string}>();
+  @Input() templateuid: any;
 
   constructor(private files: FilesService,private templatingFileApis:TemplatingApisService) {
     
@@ -26,7 +27,7 @@ export class FileTreeComponent {
   }
 
   async ngOnInit() {
-    const tree:any = await this.files.getTree();
+    const tree:any = await this.files.getTree(this.templateuid);
     this.tree$ = tree.tree.children;
   }
 

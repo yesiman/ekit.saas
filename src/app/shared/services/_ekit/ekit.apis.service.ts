@@ -17,9 +17,11 @@ export class EkitApisService {
     return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id, tableUID:this.globalService.table._id, coordinates:"X" })
   }
   getProjectTables = (lang:string) => {
-    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id })
+    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id, type:"tables" })
   }
-
+  getProjectTemplates = (lang:string) => {
+    return this.http.post(`${environment.apiURL}/datas/${lang}`, { projectUID:this.globalService.project._id,  type:"templates" })
+  }
   getProject = (uid:string,lang:string) => {
     return this.http.get(`${environment.apiURL}/projects/${lang}/`+uid)
   }

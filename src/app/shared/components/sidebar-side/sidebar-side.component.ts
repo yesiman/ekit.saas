@@ -61,7 +61,12 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
                 type: "project",
                 langs:item.langs,
                 _id:item._id,
-                icon:"list"
+                icon:"apps",
+                sub : [
+                  { name: 'Données',type:"link",icon:"close", state: 'dashboard/analytics' },
+                  { name: 'Templates',type:"link",icon:"close", state: 'dashboard/learning-management' },
+                  { name: 'Paramètres',type:"link",icon:"home", state: 'dashboard/analytics-alt' }
+                ]
           }));
 
         }),
@@ -81,13 +86,13 @@ export class SidebarSideComponent implements OnInit, OnDestroy, AfterViewInit {
           ...data
         ];
         //A VIRER / POUR GARDER LES VISU DES COMPOSANTS DISPOS
-        this.menuItemsSub = this.navService.menuItems$.subscribe(menuItem => {
+        /*this.menuItemsSub = this.navService.menuItems$.subscribe(menuItem => {
           this.menuItems = [...this.menuItems,...menuItem];
           //Checks item list has any icon type.
           this.hasIconTypeMenuItem = !!this.menuItems.filter(
             item => item.type === "icon"
           ).length;
-        });
+        });*/
     });
   }
 

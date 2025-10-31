@@ -1,4 +1,4 @@
-import { Component, NgZone, SimpleChanges } from '@angular/core';
+import { Component, Input, NgZone, SimpleChanges } from '@angular/core';
 import { FilesService } from '../../services/files.service';
 import { FileDoc } from '../../models/file.types';
 import { Subject, debounceTime } from 'rxjs';
@@ -19,7 +19,9 @@ interface Tab { id: string; doc: FileDoc; dirty: boolean; }
     MonacoEditorModule,
   ],
 })
-export class EditorTabsComponent {
+export class EditorTabsComponent {  
+  @Input() templateuid: any;
+
   tabs: Tab[] = [];
   mode:string = "code";
   activeId?: string;
@@ -60,7 +62,7 @@ export class EditorTabsComponent {
     //http://localhost:8700/api/render/klmkml
   async openFile(path: string) {
     
-    const doc:any = await this.files.openFile(path);
+    const doc:any = await this.files.openFile(path,this.templateuid);
     //console.log("filez",file);
     this.mode = "code";
     const exists = this.tabs.find(t => t.id === path);
@@ -80,7 +82,7 @@ export class EditorTabsComponent {
     //console.log(value);
     //console.log(tab.doc);
 
-    const doc:any = await this.files.saveFile(this.activeId,value);
+    const doc:any = await this.files.saveFile(this.activeId,value,this.templateuid);
 
   }
 
@@ -151,7 +153,7 @@ export class EditorTabsComponent {
   private buildUrl(bust = false) {
     //if (!this.templateId) return;
     this.loading = true;
-    const base = "http://localhost:8700/api/templates/render/klmkml";
+    const base = "http://localhost:8700/api/templates/render/"+this.templateuid;
     //const base = `/render/${encodeURIComponent(this.templateId)}`;
     const qs: Record<string,string> = { preview: '1' };
     //if (this.params) qs.params = encodeURIComponent(JSON.stringify(this.params));
